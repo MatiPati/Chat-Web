@@ -3,4 +3,4 @@
 Route::get('/', 'PagesController@getHome');
 
 Auth::routes();
-Route::get('/user', 'PagesController@getUserDashboard');
+Route::get('/app', 'PagesController@getAppDashboard')->middleware('auth');

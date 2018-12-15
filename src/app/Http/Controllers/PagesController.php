@@ -7,17 +7,7 @@ use Illuminate\Http\Request;
 class PagesController extends Controller
 {
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth', ['except' => ['getHome']]);
-    }
-
-    /**
-     * Show the application dashboard.
+     * Show the main page.
      *
      * @return \Illuminate\Http\Response
      */
@@ -25,7 +15,13 @@ class PagesController extends Controller
     {
         return view('home');
     }
-    public function getUserDashboard(){
-        return view('user.dashboard');
+
+    /**
+     * Show chat app dashboard
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getAppDashboard(){
+        return view('app.dashboard');
     }
 }

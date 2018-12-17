@@ -22,3 +22,6 @@ Route::GET('/chat', 'ChatController@index')->middleware('logged');
 Route::GET('/login', 'PagesController@getLogin')->middleware('guest');
 Route::POST('/login', 'ChatController@login')->middleware('guest');
 Route::GET('/logout', 'ChatController@logout')->middleware('logged');
+// User register handling
+Route::GET('/register', 'PagesController@getRegister')->middleware('guest');
+Route::POST('/register', 'ChatController@register')->middleware('guest');

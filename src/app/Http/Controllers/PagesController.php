@@ -21,4 +21,9 @@ class PagesController extends Controller
         return view('auth.login');
     }
 
+    public function getRegister  ()
+    {
+        return view('auth.register');
+    }
+
 }

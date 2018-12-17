@@ -20,6 +20,14 @@ class Api extends Model
             if ($res['id'] > 0) {
 
                 // TODO: User needs to be authorized
+                // TODO: session
+                /*
+                 * TODO: User session vars:
+                 *   logged_in
+                 *   id
+                 *   login
+                 *   api_token
+                 **/
                 return 200;
 
 

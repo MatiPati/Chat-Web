@@ -9523,8 +9523,9 @@ a.text-dark:focus {
   }
 }
 
-.navbar-laravel {
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+#room-list-box {
+  height: 20rem;
+  overflow-y: scroll;
+  margin-bottom: 1rem;
 }
 

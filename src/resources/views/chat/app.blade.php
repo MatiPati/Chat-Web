@@ -10,18 +10,18 @@
             <hr>
         </div>
         <div class="col-lg-9">
-            <div class="card p-2">
-                <h3>Room name</h3>
-                <p class="m-0">User user user</p>
-            </div>
+
         </div>
         <div class="col-lg-3">
-            <div id="newroom-box">
+            <div id="room-list-box" class="px-2">
+                {{-- Here will show rooms --}}
+            </div>
+            <div id="newroom-box" class="card p-2">
                 <div class="form-group">
                     <label for="name">Create new room</label>
                     <input type="text" class="form-control" id="add-room-name" placeholder="Enter name">
                 </div>
-                <button id="add-room" class="btn btn-primary">Submit</button>
+                <button id="add-room" class="btn btn-primary">Create</button>
             </div>
         </div>
     </div>

@@ -97,20 +97,45 @@ var api_token = document.getElementById('token_id').innerText;
 var user_id = document.getElementById('user_id').innerText;
 var url = 'http://azurix.pl:8080/'; //TODO: CORS
 
+var getRooms = function getRooms() {
+  fetch(url + 'rooms', {
+    method: 'GET'
+  }).then(function (res) {
+    res.json().then(function (data) {
+      console.log('Rooms refreshed!');
+      drawRooms(data);
+    });
+  });
+};
+
+var drawRooms = function drawRooms(rooms) {
+  var html = '';
+  rooms = rooms.reverse();
+  rooms.forEach(function (room) {
+    html += '<div class="card p-2 mb-1">' + '<button class="btn btn-primary d-block mb-2">' + room['name'] + '</button>' + '<p class="m-0 small">by ' + room['creatorId'] + '</p>' + '</div>';
+  });
+  document.querySelector('#room-list-box').innerHTML = html;
+};
+
 var newRoom = function newRoom(name) {
   var data = {
-    'api_token': api_token,
-    'user_id': user_id,
+    'creatorId': user_id,
     'name': name
   };
   fetch(url + 'room/new', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json; charset=utf-8'
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify(data)
   }).then(function (res) {
-    console.log(res);
+    if (res.status == 200) {
+      console.log('Room added!'); // TODO: production delete it!
+
+      getRooms();
+    } else {
+      console.log('Not added!');
+    }
   });
 };
 
@@ -120,7 +145,10 @@ newRoomBtn.addEventListener('click', function () {
   var name = document.querySelector('#add-room-name').value; // Call creating function with name
 
   newRoom(name);
-});
+}); // Init functions
+
+getRooms();
+setInterval(getRooms, 1000);
 
 /***/ }),
 

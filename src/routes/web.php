@@ -13,8 +13,12 @@
 
 
 
-Route::get('/', 'PagesController@getHome');
+Route::GET('/', 'PagesController@getHome');
 
-Route::get('/chat', 'ChatController@index');
+// Main chat app
+Route::GET('/chat', 'ChatController@index')->middleware('logged');
 
-Route::get('/login/{login}/{password}', 'ChatController@login');
+// User login handling
+Route::GET('/login', 'PagesController@getLogin')->middleware('guest');
+Route::POST('/login', 'ChatController@login')->middleware('guest');
+Route::GET('/logout', 'ChatController@logout')->middleware('logged');

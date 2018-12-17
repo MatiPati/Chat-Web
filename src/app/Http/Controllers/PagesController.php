@@ -16,4 +16,9 @@ class PagesController extends Controller
         return view('home');
     }
 
+    public function getLogin ()
+    {
+        return view('auth.login');
+    }
+
 }

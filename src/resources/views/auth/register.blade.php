@@ -23,7 +23,7 @@
                            placeholder="Confirm password" required>
                 </div>
                 {{csrf_field()}}
-                <button type="submit" class="btn btn-primary">Login</button>
+                <button type="submit" class="btn btn-primary">Register</button>
             </form>
         </div>
     </div>

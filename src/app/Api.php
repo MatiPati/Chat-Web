@@ -23,10 +23,10 @@ class Api extends Model
         try {
             $res = $client->request('POST', 'http://azurix.pl:8080/register', [
                 'form_params' => [
-                    'action' => "register",
-                    'login' => $login,
+                    'action'   => 'register', // TODO: remove in next v
+                    'login'    => $login,
                     'password' => $password,
-                    'email' => $email
+                    'email'    => $email
                 ]
             ]);
             return 1; //TODO: change to `$res->getBody()` when Patyk manage to make return codes...
@@ -49,12 +49,23 @@ class Api extends Model
         $client = new GuzzleHttp\Client();
         try {
             // TODO: no &action=login at newer version!
-            $res = $client->request('GET', 'http://azurix.pl:8080/login?action=login&login=' . $login . '&password=' . $password)->getBody();
+            $res = $client->request('POST', 'http://azurix.pl:8080/login', [
+                'form_params' => [
+                    'action'   => 'login', // TODO: remove in next v
+                    'login'    => $login,
+                    'password' => $password
+                ]
+            ])->getBody();
             $res = json_decode($res, true);
             if ($res['id'] > 0) {
                 // User with this login && password exist
                 // Create session with user credentials
-                Session::put(['logged_in' => true, 'id' => $res['id'], 'login' => $res['login'], 'api_token' => 'todo']);
+                Session::put([
+                    'logged_in' => true,
+                    'id'        => $res['id'],
+                    'login'     => $res['login'],
+                    'api_token' => 'todo'
+                ]);
                 return 200;
             } else {
                 // Bad credentials login/pass

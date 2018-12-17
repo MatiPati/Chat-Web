@@ -13,7 +13,7 @@ class ChatController extends Controller
     {
         return view('chat.app');
     }
-
+    
     /**
      * REST API user register functionality
      * POST FUNCTION
@@ -24,7 +24,12 @@ class ChatController extends Controller
     public function register (Request $request)
     {
         // From fields validation
-        $request->validate(['login' => 'required|max:32', 'email' => 'required|max:255', 'password' => 'required|min:6|max:255', 'password2' => 'required|same:password']);
+        $request->validate([
+            'login'     => 'required|max:32',
+            'email'     => 'required|max:255',
+            'password'  => 'required|min:6|max:255',
+            'password2' => 'required|same:password'
+        ]);
         //Get post values
         $login = $request->input('login');
         $email = $request->input('email');
@@ -34,7 +39,7 @@ class ChatController extends Controller
         if ($res == 1) {
             $this->login($request);
             return redirect('/chat')->with('message', 'Successfully registered!');
-        } else{
+        } else {
             //TODO: when Patyk manage to done res codes...
         }
     }
@@ -49,7 +54,10 @@ class ChatController extends Controller
     public function login (Request $request)
     {
         // From fields validation
-        $request->validate(['login' => 'required', 'password' => 'required']);
+        $request->validate([
+            'login'    => 'required',
+            'password' => 'required'
+        ]);
         // Get post values
         $login = $request->input('login');
         $password = $request->input('password');
@@ -70,7 +78,12 @@ class ChatController extends Controller
     public function logout ()
     {
         // Forget all session vars
-        Session::forget(['logged_in', 'id', 'login', 'api_token']);
+        Session::forget([
+            'logged_in',
+            'id',
+            'login',
+            'api_token'
+        ]);
         return redirect('/login')->with('message', 'Successfully logged out!');
     }
 

@@ -1,14 +1,18 @@
 const api_token = document.getElementById('token_id').innerText;
 const user_id = document.getElementById('user_id').innerText;
 const url = 'http://azurix.pl:8080/'; //TODO: CORS
+var local_rooms = [];
 
 const getRooms = () => {
     fetch(url + 'rooms', {
         method: 'GET',
     }).then((res) => {
         res.json().then((data) => {
-            console.log('Rooms refreshed!');
-            drawRooms(data);
+            if (local_rooms.length !== data.length) {
+                local_rooms = data;
+                console.log('Rooms refreshed!');
+                drawRooms(data);
+            }
         });
     });
 }
@@ -18,7 +22,7 @@ const drawRooms = (rooms) => {
     rooms = rooms.reverse();
     rooms.forEach((room) => {
         html += '<div class="card p-2 mb-1">' +
-            '<button class="btn btn-primary d-block mb-2">' + room['name'] + '</button>' +
+            '<button class="btn btn-outline-primary btn-sm d-block mb-2">' + room['name'] + '</button>' +
             '<p class="m-0 small">by ' + room['creatorId'] + '</p>' +
             '</div>'
     });
@@ -50,6 +54,7 @@ const newRoomBtn = document.querySelector('#add-room');
 newRoomBtn.addEventListener('click', () => {
     // Get input name of new room
     const name = document.querySelector('#add-room-name').value;
+    document.querySelector('#add-room-name').value = '';
     // Call creating function with name
     newRoom(name);
 })

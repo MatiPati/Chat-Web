@@ -9,10 +9,7 @@
             </h1>
             <hr>
         </div>
-        <div class="col-lg-9">
-
-        </div>
-        <div class="col-lg-3">
+        <div class="col-lg-4">
             <div id="room-list-box" class="px-2">
                 {{-- Here will show rooms --}}
             </div>
@@ -23,6 +20,9 @@
                 </div>
                 <button id="add-room" class="btn btn-primary">Create</button>
             </div>
+        </div>
+        <div class="col-lg-8">
+
         </div>
     </div>
 

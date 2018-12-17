@@ -11,6 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
+
+Route::get('/', 'PagesController@getHome');
+
+Route::get('/chat', 'ChatController@index');
+
+Route::get('/login/{login}/{password}', 'ChatController@login');

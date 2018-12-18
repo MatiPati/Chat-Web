@@ -97,7 +97,7 @@ var api_token = document.getElementById('token_id').innerText;
 var user_id = document.getElementById('user_id').innerText;
 var url = 'http://azurix.pl:8080/';
 var active_room = false;
-var active_messages = [];
+var active_messages = ['1', '2', '3'];
 var local_rooms = [];
 /*
 * REST API get rooms function

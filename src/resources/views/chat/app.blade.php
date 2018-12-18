@@ -11,7 +11,7 @@
         </div>
         <div class="col-lg-4">
             <div id="room-list-box" class="px-2">
-                {{-- Here will show rooms --}}
+                {{-- Rooms renders here --}}
             </div>
             <div id="newroom-box" class="card p-2">
                 <div class="form-group">
@@ -22,7 +22,21 @@
             </div>
         </div>
         <div class="col-lg-8">
-
+            <div class="" id="active-room">
+                <span id="active-room-id" class="d-none"></span>
+                <div class="header">
+                    <h4 id="active-room-name"></h4>
+                    <p id="active-room-creator"></p>
+                    <hr>
+                </div>
+                <div id="room-messages" class="mb-4"></div>
+                <div class="new-message">
+                    <div class="form-group">
+                        <input type="text" id="new-message-input" class="form-control" />
+                    </div>
+                    <button class="btn btn-primary" id="send-btn">Send</button>
+                </div>
+            </div>
         </div>
     </div>
 

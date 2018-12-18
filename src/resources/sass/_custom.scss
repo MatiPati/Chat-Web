@@ -3,3 +3,13 @@
   overflow-y: scroll;
   margin-bottom: 1rem;
 }
+
+#active-room{
+  #room-messages{
+    height: 40%;
+    overflow-y: scroll;
+  }
+  .new-message{
+    display: none;
+  }
+}

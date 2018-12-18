@@ -9529,3 +9529,12 @@ a.text-dark:focus {
   margin-bottom: 1rem;
 }
 
+#active-room #room-messages {
+  height: 40%;
+  overflow-y: scroll;
+}
+
+#active-room .new-message {
+  display: none;
+}
+

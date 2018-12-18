@@ -95,8 +95,9 @@
 
 var api_token = document.getElementById('token_id').innerText;
 var user_id = document.getElementById('user_id').innerText;
-var url = 'http://azurix.pl:8080/'; //TODO: CORS
-
+var url = 'http://azurix.pl:8080/';
+var active_room = false;
+var active_messages = [];
 var local_rooms = [];
 /*
 * REST API get rooms function
@@ -127,7 +128,7 @@ var drawRooms = function drawRooms(rooms) {
   var html = '';
   rooms = rooms.reverse();
   rooms.forEach(function (room) {
-    html += '<div class="card p-2 mb-1">' + '<button class="btn btn-outline-primary btn-sm d-block mb-2 change-room">' + room['name'] + '</button>' + '<span class="d-none">' + room['id'] + '</span>' + '<p class="m-0 small">by ' + room['creatorId'] + '</p>' + '</div>';
+    html += '<div class="card p-2 mb-1">' + '<button class="btn btn-outline-primary btn-sm d-block mb-2 change-room">' + room['name'] + '</button>' + '<span class="d-none">' + room['id'] + '</span>' + '<p class="m-0 small">maybe latter</p>' + '</div>';
   });
   document.querySelector('#room-list-box').innerHTML = html;
 };
@@ -149,7 +150,25 @@ var drawRoom = function drawRoom(id, name, creator) {
   roomElement.querySelector('#room-messages').innerHTML = 'here render messages';
   roomElement.querySelector('.new-message').classList.add('d-block'); //Draw `send message` input box
 
+  getRoomMessages(id, true);
   initMessageSend();
+};
+/*
+* Renders room messages on screen
+*/
+
+
+var drawMessages = function drawMessages(messages, scroll) {
+  var html = '';
+  var messagesElement = document.querySelector('#room-messages');
+  messages.forEach(function (message) {
+    html += '<p><span>pisze:</span><br>' + message['message'] + '</p>';
+  });
+  messagesElement.innerHTML = html;
+
+  if (scroll) {
+    messagesElement.scrollTop = messagesElement.scrollHeight;
+  }
 };
 /*
 * Get room messages with REST API
@@ -160,20 +179,15 @@ var drawRoom = function drawRoom(id, name, creator) {
 
 var sendMessage = function sendMessage(message) {
   var roomId = document.querySelector('#active-room-id').innerHTML;
-  var data = {
-    'sender_id': user_id,
-    //TODO: update when Patryk gives newer version...
-    'message': message
-  };
-  fetch(url + 'room/' + roomId + '/message', {
+  fetch(url + 'room/' + roomId + '/message?senderId=' + user_id + '&message=' + message, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
+      "Content-Type": "text/plain"
+    }
   }).then(function (res) {
     if (res.status === 200) {
-      console.log('Send!');
+      console.log('Message send!');
+      getRoomMessages(roomId, true);
     } else {
       console.log('error'); //TODO: handle that
     }
@@ -184,24 +198,55 @@ var sendMessage = function sendMessage(message) {
 */
 
 
-var getRoomMessages = function getRoomMessages(id, ammount) {} //TODO
+var getRoomMessages = function getRoomMessages(id, forcescroll) {
+  fetch(url + 'room/' + id, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(function (res) {
+    res.json().then(function (data) {
+      var messages = data.reverse();
 
+      if (messages.length === 0) {
+        drawMessages(messages, true);
+      } else {
+        if (forcescroll) {
+          drawMessages(messages, true);
+          active_messages = messages;
+        } else if (data[data.length - 1]['message'] !== active_messages[active_messages.length - 1]['message']) {
+          active_messages = messages;
+          drawMessages(messages, true);
+        } else {
+          drawMessages(messages, false);
+        }
+      }
+    });
+  });
+
+  if (active_room === false) {
+    setTimeout(refreshMessages, 1000);
+  }
+
+  active_room = id;
+};
+
+var refreshMessages = function refreshMessages() {
+  getRoomMessages(active_room, false);
+  setTimeout(refreshMessages, 1000);
+};
 /*
 * Creating new room with REST API
 */
-;
+
 
 var newRoom = function newRoom(name) {
-  var data = {
-    'creatorId': user_id,
-    'name': name
-  };
-  fetch(url + 'room/new', {
+  fetch(url + 'room/new?creatorId=' + user_id + '&name=' + name, {
+    //TODO: Patryk must change to `creatorId`
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
+    }
   }).then(function (res) {
     if (res.status === 200) {
       //200 api response = OK! (room created)
@@ -220,7 +265,11 @@ var initMessageSend = function initMessageSend() {
   var sendBtn = document.querySelector('#send-btn');
   sendBtn.addEventListener('click', function () {
     var message = document.querySelector('#new-message-input').value;
-    sendMessage(message);
+
+    if (message !== '') {
+      document.querySelector('#new-message-input').value = '';
+      sendMessage(message);
+    }
   });
 }; // Needs initialization AFTER rooms on screen are rendered
 

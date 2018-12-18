@@ -99,6 +99,8 @@ var url = 'http://azurix.pl:8080/';
 var active_room = false;
 var active_messages = ['1', '2', '3'];
 var local_rooms = [];
+var messagesShift = 0;
+var messagesCount = 10;
 /*
 * REST API get rooms function
 */
@@ -293,6 +295,8 @@ var initRoomChange = function initRoomChange() {
       var id = button.nextElementSibling.innerHTML;
       var name = button.innerHTML;
       var creator = button.nextElementSibling.nextElementSibling.innerHTML;
+      messagesShift = 0;
+      messagesCount = 10;
       console.log('Changing active room to room_id = ' + id);
       drawRoom(id, name, creator);
     });
@@ -321,7 +325,7 @@ setInterval(getRooms, 1000);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\xampp_new\htdocs\Chat-Web\src\resources\js\backend.js */"./resources/js/backend.js");
+module.exports = __webpack_require__(/*! D:\xampp_new\htdocs\Chat-Web\resources\js\backend.js */"./resources/js/backend.js");
 
 
 /***/ })

@@ -158,7 +158,7 @@ var drawRoom = function drawRoom(id, name, creator) {
 */
 
 
-var drawMessages = function drawMessages(messages, scroll) {
+var drawMessages = function drawMessages(messages, newMessage, forceScroll) {
   var html = '';
   var messagesElement = document.querySelector('#room-messages');
   messages.forEach(function (message) {
@@ -166,8 +166,20 @@ var drawMessages = function drawMessages(messages, scroll) {
   });
   messagesElement.innerHTML = html;
 
-  if (scroll) {
-    messagesElement.scrollTop = messagesElement.scrollHeight;
+  if (newMessage) {
+    if (forceScroll) {
+      messagesElement.scrollTop = messagesElement.scrollHeight;
+    } else {
+      var fromBottom = document.querySelector('#room-messages').scrollHeight - (document.querySelector('#room-messages').scrollHeight - document.querySelector('#room-messages').scrollTop);
+      console.log(fromBottom);
+
+      if (fromBottom > 110) {
+        // Don't scroll if user scrolled up enough
+        messagesElement.scrollTop = messagesElement.scrollHeight;
+      } else {
+        console.log('You got new message down there!'); //TODO: front end event handle
+      }
+    }
   }
 };
 /*
@@ -212,7 +224,7 @@ var getRoomMessages = function getRoomMessages(id, forcescroll) {
         drawMessages(messages, true);
       } else {
         if (forcescroll) {
-          drawMessages(messages, true);
+          drawMessages(messages, true, true);
           active_messages = messages;
         } else if (data[data.length - 1]['message'] !== active_messages[active_messages.length - 1]['message']) {
           active_messages = messages;

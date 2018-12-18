@@ -60,15 +60,25 @@ const drawRoom = (id, name, creator) => {
 /*
 * Renders room messages on screen
 */
-const drawMessages = (messages, scroll) => {
+const drawMessages = (messages, newMessage, forceScroll) => {
     let html = '';
     const messagesElement = document.querySelector('#room-messages');
     messages.forEach((message) => {
         html += '<p><span>pisze:</span><br>' + message['message'] + '</p>';
     });
     messagesElement.innerHTML = html;
-    if (scroll) {
-        messagesElement.scrollTop = messagesElement.scrollHeight;
+    if (newMessage) {
+        if (forceScroll) {
+            messagesElement.scrollTop = messagesElement.scrollHeight;
+        } else{
+            const fromBottom = document.querySelector('#room-messages').scrollHeight - (document.querySelector('#room-messages').scrollHeight - document.querySelector('#room-messages').scrollTop);
+            console.log(fromBottom);
+            if (fromBottom > 110) { // Don't scroll if user scrolled up enough
+                messagesElement.scrollTop = messagesElement.scrollHeight;
+            } else {
+                console.log('You got new message down there!'); //TODO: front end event handle
+            }
+        }
     }
 };
 
@@ -110,7 +120,7 @@ const getRoomMessages = (id, forcescroll) => {
                 drawMessages(messages, true);
             } else {
                 if (forcescroll) {
-                    drawMessages(messages, true);
+                    drawMessages(messages, true, true);
                     active_messages = messages;
                 } else if (data[data.length-1]['message'] !== active_messages[active_messages.length-1]['message']) {
                     active_messages = messages;

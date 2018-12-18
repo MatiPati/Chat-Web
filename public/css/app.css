@@ -9524,7 +9524,7 @@ a.text-dark:focus {
 }
 
 a {
-  transition: 0.3s all;
+  transition: 0.3s color;
 }
 
 #room-list-box {

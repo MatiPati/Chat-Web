@@ -38,7 +38,7 @@ class ChatController extends Controller
         $res = Api::register($login, $email, $password);
         if ($res == 1) {
             $this->login($request);
-            return redirect('/chat')->with('message', 'Successfully registered!');
+            return redirect('/chat');
         } else {
             //TODO: when Patyk manage to done res codes...
         }
@@ -65,7 +65,7 @@ class ChatController extends Controller
         $res = Api::login($login, $password);
         if ($res == 200) {
             // Logged in session vars added
-            return redirect('/chat')->with('message', 'Successfully logged in!');
+            return redirect('/chat');
         } else {
             // Bad credentials
             return redirect('/login')->with('message', 'Bad credentials!');

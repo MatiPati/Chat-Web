@@ -4,6 +4,8 @@ const url = 'http://azurix.pl:8080/';
 let active_room = false;
 let active_messages = ['1', '2', '3'];
 let local_rooms = [];
+let messagesShift = 0;
+let messagesCount = 10;
 
 /*
 * REST API get rooms function
@@ -136,7 +138,6 @@ const getRoomMessages = (id, forcescroll) => {
     }
     active_room = id;
 };
-
 const refreshMessages = () => {
     getRoomMessages(active_room, false);
     setTimeout(refreshMessages, 1000);
@@ -183,6 +184,8 @@ const initRoomChange = () => {
             const id = button.nextElementSibling.innerHTML;
             const name = button.innerHTML;
             const creator = button.nextElementSibling.nextElementSibling.innerHTML;
+            messagesShift = 0;
+            messagesCount = 10;
             console.log('Changing active room to room_id = ' + id);
             drawRoom(id, name, creator);
         });

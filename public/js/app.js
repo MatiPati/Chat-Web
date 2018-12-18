@@ -36164,8 +36164,8 @@ if (token) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\xampp_new\htdocs\Chat-Web\src\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\xampp_new\htdocs\Chat-Web\src\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\xampp_new\htdocs\Chat-Web\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\xampp_new\htdocs\Chat-Web\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

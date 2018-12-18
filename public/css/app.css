@@ -9523,6 +9523,10 @@ a.text-dark:focus {
   }
 }
 
+a {
+  transition: 0.3s color;
+}
+
 #room-list-box {
   height: 22rem;
   overflow-y: scroll;

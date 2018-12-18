@@ -1,7 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.default')
 
 @section('content')
-<div class="container">
-    <h2>Strona główna</h2>
-</div>
+
+    <h1>Home</h1>
+
 @endsection

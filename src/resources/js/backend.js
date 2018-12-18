@@ -116,8 +116,8 @@ const newRoom = (name) => {
 const initMessageSend = () => {
     const sendBtn = document.querySelector('#send-btn');
     sendBtn.addEventListener('click', () => {
-        const message = document.querySelector('#new-message-input').value;
-        sendMessage(message);
+       const message = document.querySelector('#new-message-input').value;
+       sendMessage(message);
     });
 }
 
@@ -126,13 +126,13 @@ const initRoomChange = () => {
     const changeRoomBtn = document.querySelectorAll(".change-room");
 
     changeRoomBtn.forEach( (button) => {
-        button.addEventListener('click', () => {
-            const id = button.nextElementSibling.innerHTML;
-            const name = button.innerHTML;
-            const creator = button.nextElementSibling.nextElementSibling.innerHTML;
-            console.log('Changing active room to room_id = ' + id);
-            drawRoom(id, name, creator);
-        });
+       button.addEventListener('click', () => {
+           const id = button.nextElementSibling.innerHTML;
+           const name = button.innerHTML;
+           const creator = button.nextElementSibling.nextElementSibling.innerHTML;
+           console.log('Changing active room to room_id = ' + id);
+           drawRoom(id, name, creator);
+       });
     });
 }
 

@@ -17,7 +17,7 @@
             @endif
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center" href="https://github.com/MatiPati/Chat-Web"
+                    <a class="nav-link d-flex align-items-center" href="https://github.com/MatiPati"
                        target="_blank">
                         <i class="bx bxl-github h4 m-0 pr-2"></i>Github
                     </a>

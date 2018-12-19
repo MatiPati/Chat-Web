@@ -34,6 +34,7 @@ const initRoomChange = () => {
             const creator = button.nextElementSibling.nextElementSibling.innerHTML;
             messagesCount = 20;
             console.log('Changing active room to room_id = ' + id);
+            getRoomUsers(id);
             drawRoom(id, name, creator);
         });
     });

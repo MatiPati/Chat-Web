@@ -48,6 +48,22 @@ const sendMessage = (message) => {
 };
 
 /*
+* Get room users with REST API
+*/
+const getRoomUsers = (id) => {
+    fetch(url + 'room/' + id + '/users', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then((res) => {
+        res.json().then((data) => {
+            drawRoomUsers(data);
+        });
+    });
+}
+
+/*
 * Get room messages with REST API
 */
 const getRoomMessages = (id, forcescroll) => {

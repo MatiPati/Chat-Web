@@ -27,6 +27,7 @@
                 <div class="header">
                     <h4 id="active-room-name"></h4>
                     <p id="active-room-creator"></p>
+                    <p id="users" class="mb-0"></p>
                     <hr>
                 </div>
                 <div id="room-messages" class="mb-4"></div>

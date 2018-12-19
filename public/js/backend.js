@@ -50,6 +50,23 @@ var sendMessage = function sendMessage(message) {
   messagesCount++;
 };
 /*
+* Get room users with REST API
+*/
+
+
+var getRoomUsers = function getRoomUsers(id) {
+  fetch(url + 'room/' + id + '/users', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(function (res) {
+    res.json().then(function (data) {
+      drawRoomUsers(data);
+    });
+  });
+};
+/*
 * Get room messages with REST API
 */
 
@@ -154,6 +171,20 @@ var drawRoom = function drawRoom(id, name, creator) {
   getRoomMessages(id, true);
   initMessageSend();
 };
+
+var drawRoomUsers = function drawRoomUsers(users) {
+  var usersHtml = '';
+
+  if (Array.isArray(users)) {
+    users.forEach(function (user) {
+      usersHtml += '<span class="badge badge-secondary small">' + user['user']['login'] + '</span> ';
+    });
+  } else {
+    usersHtml = '<span>Nie ma żadnych gości!</span>';
+  }
+
+  document.querySelector('#users').innerHTML = usersHtml;
+};
 /*
 * Renders room messages on screen
 */
@@ -227,6 +258,7 @@ var initRoomChange = function initRoomChange() {
       var creator = button.nextElementSibling.nextElementSibling.innerHTML;
       messagesCount = 20;
       console.log('Changing active room to room_id = ' + id);
+      getRoomUsers(id);
       drawRoom(id, name, creator);
     });
   });

@@ -32,6 +32,18 @@ const drawRoom = (id, name, creator) => {
     initMessageSend();
 };
 
+const drawRoomUsers = (users) => {
+    let usersHtml = '';
+    if (Array.isArray(users)) {
+        users.forEach( (user) => {
+            usersHtml += '<span class="badge badge-secondary small">' + user['user']['login'] + '</span> ';
+        });
+    } else{
+        usersHtml = '<span>Nie ma żadnych gości!</span>';
+    }
+    document.querySelector('#users').innerHTML = usersHtml;
+};
+
 /*
 * Renders room messages on screen
 */

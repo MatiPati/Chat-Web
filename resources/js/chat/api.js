@@ -52,7 +52,7 @@ const sendMessage = (message) => {
 */
 const getRoomUsers = (id) => {
     fetch(url + 'room/' + id + '/users', {
-        method: 'POST',
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json'
         }

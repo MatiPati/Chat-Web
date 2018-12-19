@@ -56,7 +56,7 @@ var sendMessage = function sendMessage(message) {
 
 var getRoomUsers = function getRoomUsers(id) {
   fetch(url + 'room/' + id + '/users', {
-    method: 'POST',
+    method: 'GET',
     headers: {
       'Content-Type': 'application/json'
     }

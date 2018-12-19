@@ -25,7 +25,7 @@ const getRooms = () => {
 };
 
 /*
-* Get room messages with REST API
+* Send message with REST API
 *
 * @param message = string message
 */
@@ -41,7 +41,26 @@ const sendMessage = (message) => {
             console.log('Message send!');
             getRoomMessages(roomId, true);
         } else {
-            console.log('error'); //TODO: handle that
+            console.log('Message cannot be sent!'); //TODO: handle that
+        }
+    });
+    messagesCount++;
+};
+
+/*
+* Delete message with REST API
+*
+* @param message = string message
+*/
+const deleteMessage = (id) => {
+    fetch(url + 'room/' + active_room + '?messageId=' + id, {
+        method: 'DELETE'
+    }).then((res) => {
+        if (res.status === 200) {
+            console.log('Message deleted!');
+            getRoomMessages(active_room, true);
+        } else {
+            console.log('Message cannot be deleted!'); //TODO: handle that
         }
     });
     messagesCount++;
@@ -71,7 +90,7 @@ const addUser = (userId) => {
         method: 'POST'
     }).then((res) => {
         res.json().then((data) => {
-            if(data == 200){
+            if (data == 200) {
                 console.log('User added!');
                 $('#roomAddForm').addClass('d-none');
                 $('#roomAddInput').val = '';
@@ -98,13 +117,13 @@ const getRoomMessages = (id, forcescroll) => {
                 if (forcescroll) {
                     drawMessages(messages, true, true);
                     active_messages = messages;
-                } else if (data[data.length-1]['message'] !== active_messages[active_messages.length-1]['message']) {
+                } else if (data[data.length - 1]['message'] !== active_messages[active_messages.length - 1]['message']) {
                     messagesCount++; //TODO: -/+ if deleted/added handle
                     getRoomMessages(id, forcescroll);
                     active_messages = messages;
                     drawMessages(messages, true);
                 } else {
-                    drawMessages(messages, false);
+                    //drawMessages(messages, false);
                 }
             }
         });

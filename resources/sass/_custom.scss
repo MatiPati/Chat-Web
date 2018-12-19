@@ -18,6 +18,9 @@ a{
   #room-messages{
     height: 50vh;
     overflow-y: scroll;
+    .delete-badge{
+      cursor: pointer;
+    }
   }
   .new-message{
     display: none;

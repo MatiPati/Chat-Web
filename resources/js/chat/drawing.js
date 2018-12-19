@@ -1,5 +1,5 @@
 /*
-* Renders roms on screen
+* Renders user connected roms on screen
 *
 * @param rooms = array of rooms to render
 */
@@ -26,12 +26,15 @@ const drawRoom = (id, name, creator) => {
     roomElement.querySelector('#active-room-id').innerHTML = id; //TODO: maybe delete later
     roomElement.querySelector('#active-room-name').innerHTML = name; //Render room name
     roomElement.querySelector('#active-room-creator').innerHTML = creator; //Render room creator
-    roomElement.querySelector('#room-messages').innerHTML = 'here render messages';
+    roomElement.querySelector('#room-messages').innerHTML = 'Loading messages...';
     roomElement.querySelector('.new-message').classList.add('d-block'); //Draw `send message` input box
     getRoomMessages(id, true);
     initMessageSend();
 };
 
+/*
+* Renders room users from active room on screen
+*/
 const drawRoomUsers = (users) => {
     let usersHtml = '';
     if (Array.isArray(users)) {
@@ -45,17 +48,18 @@ const drawRoomUsers = (users) => {
 };
 
 /*
-* Renders room messages on screen
+* Renders active room messages on screen
 */
 const drawMessages = (messages, newMessage, forceScroll) => {
     let html = '';
     const messagesElement = document.querySelector('#room-messages');
     let lastSender = '';
     messages.forEach((message) => {
-        if (message['senderId']['login'] != lastSender) {
+        //Every message drawing
+        if (message['senderId']['login'] !== lastSender) {
             html += '<p class="mb-0 mt-3 h5"><span class="badge-primary badge">' + message['senderId']['login'] + '</span></p>';
         }
-        html += '<p class="mb-0">' + message['message'] + '</p>';
+        html += '<p class="mb-0 delete-p" oncontextmenu="deleteMessage(' + message['id'] + ');return false;">' + message['message'] + '</p>';
         lastSender = message['senderId']['login'];
     });
     messagesElement.innerHTML = html;

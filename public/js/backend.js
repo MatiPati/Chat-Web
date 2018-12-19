@@ -26,7 +26,7 @@ var getRooms = function getRooms() {
   });
 };
 /*
-* Get room messages with REST API
+* Send message with REST API
 *
 * @param message = string message
 */
@@ -44,7 +44,27 @@ var sendMessage = function sendMessage(message) {
       console.log('Message send!');
       getRoomMessages(roomId, true);
     } else {
-      console.log('error'); //TODO: handle that
+      console.log('Message cannot be sent!'); //TODO: handle that
+    }
+  });
+  messagesCount++;
+};
+/*
+* Delete message with REST API
+*
+* @param message = string message
+*/
+
+
+var deleteMessage = function deleteMessage(id) {
+  fetch(url + 'room/' + active_room + '?messageId=' + id, {
+    method: 'DELETE'
+  }).then(function (res) {
+    if (res.status === 200) {
+      console.log('Message deleted!');
+      getRoomMessages(active_room, true);
+    } else {
+      console.log('Message cannot be deleted!'); //TODO: handle that
     }
   });
   messagesCount++;
@@ -111,8 +131,7 @@ var getRoomMessages = function getRoomMessages(id, forcescroll) {
           getRoomMessages(id, forcescroll);
           active_messages = messages;
           drawMessages(messages, true);
-        } else {
-          drawMessages(messages, false);
+        } else {//drawMessages(messages, false);
         }
       }
     });
@@ -155,7 +174,7 @@ var newRoom = function newRoom(name) {
   });
 };
 /*
-* Renders roms on screen
+* Renders user connected roms on screen
 *
 * @param rooms = array of rooms to render
 */
@@ -184,12 +203,16 @@ var drawRoom = function drawRoom(id, name, creator) {
 
   roomElement.querySelector('#active-room-creator').innerHTML = creator; //Render room creator
 
-  roomElement.querySelector('#room-messages').innerHTML = 'here render messages';
+  roomElement.querySelector('#room-messages').innerHTML = 'Loading messages...';
   roomElement.querySelector('.new-message').classList.add('d-block'); //Draw `send message` input box
 
   getRoomMessages(id, true);
   initMessageSend();
 };
+/*
+* Renders room users from active room on screen
+*/
+
 
 var drawRoomUsers = function drawRoomUsers(users) {
   var usersHtml = '';
@@ -205,7 +228,7 @@ var drawRoomUsers = function drawRoomUsers(users) {
   document.querySelector('#roomUsers').innerHTML = usersHtml;
 };
 /*
-* Renders room messages on screen
+* Renders active room messages on screen
 */
 
 
@@ -214,11 +237,12 @@ var drawMessages = function drawMessages(messages, newMessage, forceScroll) {
   var messagesElement = document.querySelector('#room-messages');
   var lastSender = '';
   messages.forEach(function (message) {
-    if (message['senderId']['login'] != lastSender) {
+    //Every message drawing
+    if (message['senderId']['login'] !== lastSender) {
       html += '<p class="mb-0 mt-3 h5"><span class="badge-primary badge">' + message['senderId']['login'] + '</span></p>';
     }
 
-    html += '<p class="mb-0">' + message['message'] + '</p>';
+    html += '<p class="mb-0 delete-p" oncontextmenu="deleteMessage(' + message['id'] + ');return false;">' + message['message'] + '</p>';
     lastSender = message['senderId']['login'];
   });
   messagesElement.innerHTML = html;

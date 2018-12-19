@@ -9546,6 +9546,10 @@ a {
   overflow-y: scroll;
 }
 
+#active-room #room-messages .delete-badge {
+  cursor: pointer;
+}
+
 #active-room .new-message {
   display: none;
 }

@@ -10,7 +10,7 @@ let messagesCount = 20;
 * REST API get rooms function
 */
 const getRooms = () => {
-    fetch(url + 'rooms', {
+    fetch(url + 'user/' + user_id + '/rooms', {
         method: 'GET',
     }).then((res) => {
         res.json().then((data) => {
@@ -61,7 +61,24 @@ const getRoomUsers = (id) => {
             drawRoomUsers(data);
         });
     });
-}
+};
+
+/*
+* Add user to room with REST API
+*/
+const addUser = (userId) => {
+    fetch(url + 'room/' + active_room + '/add/user?userId=' + userId, {
+        method: 'POST'
+    }).then((res) => {
+        res.json().then((data) => {
+            if(data == 200){
+                console.log('User added!');
+                $('#roomAddForm').addClass('d-none');
+                $('#roomAddInput').val = '';
+            }
+        });
+    });
+};
 
 /*
 * Get room messages with REST API
@@ -99,6 +116,7 @@ const getRoomMessages = (id, forcescroll) => {
 };
 const refreshMessages = () => {
     getRoomMessages(active_room, false);
+    getRoomUsers(active_room);
     setTimeout(refreshMessages, 1000);
 };
 

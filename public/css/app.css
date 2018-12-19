@@ -9533,6 +9533,14 @@ a {
   margin-bottom: 1rem;
 }
 
+#active-room #addFormShow {
+  cursor: pointer;
+}
+
+#active-room #roomAddForm {
+  display: flex;
+}
+
 #active-room #room-messages {
   height: 40%;
   overflow-y: scroll;

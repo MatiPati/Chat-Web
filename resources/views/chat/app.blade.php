@@ -27,7 +27,11 @@
                 <div class="header">
                     <h4 id="active-room-name"></h4>
                     <p id="active-room-creator"></p>
-                    <p id="users" class="mb-0"></p>
+                    <p class="mb-0"><span id="roomUsers"></span><span onclick="$('#roomAddForm').toggleClass('d-none')" class="badge badge-success" id="addFormShow"><i class="bx bx-plus-circle"></i></span></p>
+                    <div class="add-form d-none form-group d-none mt-2" id="roomAddForm">
+                        <input type="text" id="roomAddInput" class="form-control m-0">
+                        <button class="btn btn-sm btn-success" onclick="addUser($(this).prev().val())">Add user</button>
+                    </div>
                     <hr>
                 </div>
                 <div id="room-messages" class="mb-4"></div>

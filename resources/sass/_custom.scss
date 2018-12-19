@@ -9,6 +9,12 @@ a{
 }
 
 #active-room{
+  #addFormShow{
+    cursor: pointer;
+  }
+  #roomAddForm{
+    display: flex;
+  }
   #room-messages{
     height: 40%;
     overflow-y: scroll;

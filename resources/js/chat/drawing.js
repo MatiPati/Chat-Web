@@ -8,9 +8,9 @@ const drawRooms = (rooms) => {
     rooms = rooms.reverse();
     rooms.forEach((room) => {
         html += '<div class="card p-2 mb-1">' +
-            '<button class="btn btn-outline-primary btn-sm d-block mb-2 change-room">' + room['name'] + '</button>' +
-            '<span class="d-none">' + room['id'] + '</span>' +
-            '<p class="m-0 small">by ' + room['creator']['login'] + '</p>' +
+            '<button class="btn btn-outline-primary btn-sm d-block mb-2 change-room">' + room['room']['name'] + '</button>' +
+            '<span class="d-none">' + room['room']['id'] + '</span>' +
+            '<p class="m-0 small">by ' + room['room']['creator']['login'] + '</p>' +
             '</div>';
     });
     document.querySelector('#room-list-box').innerHTML = html;
@@ -41,7 +41,7 @@ const drawRoomUsers = (users) => {
     } else{
         usersHtml = '<span>Nie ma żadnych gości!</span>';
     }
-    document.querySelector('#users').innerHTML = usersHtml;
+    document.querySelector('#roomUsers').innerHTML = usersHtml;
 };
 
 /*

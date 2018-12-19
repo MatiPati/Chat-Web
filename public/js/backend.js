@@ -12,7 +12,7 @@ var messagesCount = 20;
 */
 
 var getRooms = function getRooms() {
-  fetch(url + 'rooms', {
+  fetch(url + 'user/' + user_id + '/rooms', {
     method: 'GET'
   }).then(function (res) {
     res.json().then(function (data) {
@@ -67,6 +67,24 @@ var getRoomUsers = function getRoomUsers(id) {
   });
 };
 /*
+* Add user to room with REST API
+*/
+
+
+var addUser = function addUser(userId) {
+  fetch(url + 'room/' + active_room + '/add/user?userId=' + userId, {
+    method: 'POST'
+  }).then(function (res) {
+    res.json().then(function (data) {
+      if (data == 200) {
+        console.log('User added!');
+        $('#roomAddForm').addClass('d-none');
+        $('#roomAddInput').val = '';
+      }
+    });
+  });
+};
+/*
 * Get room messages with REST API
 */
 
@@ -109,6 +127,7 @@ var getRoomMessages = function getRoomMessages(id, forcescroll) {
 
 var refreshMessages = function refreshMessages() {
   getRoomMessages(active_room, false);
+  getRoomUsers(active_room);
   setTimeout(refreshMessages, 1000);
 };
 /*
@@ -146,7 +165,7 @@ var drawRooms = function drawRooms(rooms) {
   var html = '';
   rooms = rooms.reverse();
   rooms.forEach(function (room) {
-    html += '<div class="card p-2 mb-1">' + '<button class="btn btn-outline-primary btn-sm d-block mb-2 change-room">' + room['name'] + '</button>' + '<span class="d-none">' + room['id'] + '</span>' + '<p class="m-0 small">by ' + room['creator']['login'] + '</p>' + '</div>';
+    html += '<div class="card p-2 mb-1">' + '<button class="btn btn-outline-primary btn-sm d-block mb-2 change-room">' + room['room']['name'] + '</button>' + '<span class="d-none">' + room['room']['id'] + '</span>' + '<p class="m-0 small">by ' + room['room']['creator']['login'] + '</p>' + '</div>';
   });
   document.querySelector('#room-list-box').innerHTML = html;
 };
@@ -183,7 +202,7 @@ var drawRoomUsers = function drawRoomUsers(users) {
     usersHtml = '<span>Nie ma żadnych gości!</span>';
   }
 
-  document.querySelector('#users').innerHTML = usersHtml;
+  document.querySelector('#roomUsers').innerHTML = usersHtml;
 };
 /*
 * Renders room messages on screen
@@ -260,6 +279,7 @@ var initRoomChange = function initRoomChange() {
       console.log('Changing active room to room_id = ' + id);
       getRoomUsers(id);
       drawRoom(id, name, creator);
+      document.querySelector('#active-room').classList.remove('d-none');
     });
   });
 }; // `Add new room` button initialization

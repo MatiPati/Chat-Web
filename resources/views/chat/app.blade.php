@@ -3,14 +3,13 @@
 @section('content')
 
     <div class="row">
-        <div class="col-lg-12">
-            <h1 class="text-right">
-                Logged as - {{session('login')}} <= {{session('id')}}
-            </h1>
-            <hr>
-        </div>
-        <div class="col-lg-4">
-            <div id="room-list-box" class="px-2">
+        <div class="col-lg-2">
+            <div>
+                <p>
+                    Welcome <strong>{{session('login')}}</strong><sup><span class="badge badge-secondary">[{{session('id')}}]</span></sup>
+                </p>
+            </div>
+            <div id="room-list-box">
                 {{-- Rooms renders here --}}
             </div>
             <div id="newroom-box" class="card p-2">
@@ -21,7 +20,7 @@
                 <button id="add-room" class="btn btn-primary">Create</button>
             </div>
         </div>
-        <div class="col-lg-8">
+        <div class="col-lg-10">
             <div class="d-none" id="active-room">
                 <span id="active-room-id" class="d-none"></span>
                 <div class="header">

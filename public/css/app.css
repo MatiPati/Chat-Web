@@ -9528,7 +9528,7 @@ a {
 }
 
 #room-list-box {
-  height: 22rem;
+  height: 50vh;
   overflow-y: scroll;
   margin-bottom: 1rem;
 }
@@ -9542,7 +9542,7 @@ a {
 }
 
 #active-room #room-messages {
-  height: 40%;
+  height: 50vh;
   overflow-y: scroll;
 }
 

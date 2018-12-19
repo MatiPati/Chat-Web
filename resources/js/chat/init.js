@@ -13,6 +13,8 @@ const initMessageSend = () => {
             send();
         }
     });
+
+    //Send function
     const send = () => {
         const message = document.querySelector('#new-message-input').value;
         if(message !== ''){
@@ -30,7 +32,6 @@ const initRoomChange = () => {
             const id = button.nextElementSibling.innerHTML;
             const name = button.innerHTML;
             const creator = button.nextElementSibling.nextElementSibling.innerHTML;
-            messagesShift = 0;
             messagesCount = 20;
             console.log('Changing active room to room_id = ' + id);
             drawRoom(id, name, creator);

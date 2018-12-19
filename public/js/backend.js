@@ -6,7 +6,6 @@ var url = 'http://azurix.pl:8080/';
 var active_room = false;
 var active_messages = ['1', '2', '3'];
 var local_rooms = [];
-var messagesShift = 0;
 var messagesCount = 20;
 /*
 * REST API get rooms function
@@ -72,6 +71,9 @@ var getRoomMessages = function getRoomMessages(id, forcescroll) {
           drawMessages(messages, true, true);
           active_messages = messages;
         } else if (data[data.length - 1]['message'] !== active_messages[active_messages.length - 1]['message']) {
+          messagesCount++; //TODO: -/+ if deleted/added handle
+
+          getRoomMessages(id, forcescroll);
           active_messages = messages;
           drawMessages(messages, true);
         } else {
@@ -127,7 +129,7 @@ var drawRooms = function drawRooms(rooms) {
   var html = '';
   rooms = rooms.reverse();
   rooms.forEach(function (room) {
-    html += '<div class="card p-2 mb-1">' + '<button class="btn btn-outline-primary btn-sm d-block mb-2 change-room">' + room['name'] + '</button>' + '<span class="d-none">' + room['id'] + '</span>' + '<p class="m-0 small">maybe latter</p>' + '</div>';
+    html += '<div class="card p-2 mb-1">' + '<button class="btn btn-outline-primary btn-sm d-block mb-2 change-room">' + room['name'] + '</button>' + '<span class="d-none">' + room['id'] + '</span>' + '<p class="m-0 small">by ' + room['creator']['login'] + '</p>' + '</div>';
   });
   document.querySelector('#room-list-box').innerHTML = html;
 };
@@ -203,7 +205,7 @@ var initMessageSend = function initMessageSend() {
     if (event.key === "Enter") {
       send();
     }
-  });
+  }); //Send function
 
   var send = function send() {
     var message = document.querySelector('#new-message-input').value;
@@ -223,7 +225,6 @@ var initRoomChange = function initRoomChange() {
       var id = button.nextElementSibling.innerHTML;
       var name = button.innerHTML;
       var creator = button.nextElementSibling.nextElementSibling.innerHTML;
-      messagesShift = 0;
       messagesCount = 20;
       console.log('Changing active room to room_id = ' + id);
       drawRoom(id, name, creator);

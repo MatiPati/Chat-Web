@@ -4,7 +4,6 @@ const url = 'http://azurix.pl:8080/';
 let active_room = false;
 let active_messages = ['1', '2', '3'];
 let local_rooms = [];
-let messagesShift = 0;
 let messagesCount = 20;
 
 /*
@@ -67,6 +66,8 @@ const getRoomMessages = (id, forcescroll) => {
                     drawMessages(messages, true, true);
                     active_messages = messages;
                 } else if (data[data.length-1]['message'] !== active_messages[active_messages.length-1]['message']) {
+                    messagesCount++; //TODO: -/+ if deleted/added handle
+                    getRoomMessages(id, forcescroll);
                     active_messages = messages;
                     drawMessages(messages, true);
                 } else {

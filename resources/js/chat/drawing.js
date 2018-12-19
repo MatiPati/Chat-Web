@@ -10,7 +10,7 @@ const drawRooms = (rooms) => {
         html += '<div class="card p-2 mb-1">' +
             '<button class="btn btn-outline-primary btn-sm d-block mb-2 change-room">' + room['name'] + '</button>' +
             '<span class="d-none">' + room['id'] + '</span>' +
-            '<p class="m-0 small">maybe latter</p>' +
+            '<p class="m-0 small">by ' + room['creator']['login'] + '</p>' +
             '</div>';
     });
     document.querySelector('#room-list-box').innerHTML = html;

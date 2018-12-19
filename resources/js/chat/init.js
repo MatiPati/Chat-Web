@@ -36,6 +36,7 @@ const initRoomChange = () => {
             console.log('Changing active room to room_id = ' + id);
             getRoomUsers(id);
             drawRoom(id, name, creator);
+            document.querySelector('#active-room').classList.remove('d-none');
         });
     });
 };

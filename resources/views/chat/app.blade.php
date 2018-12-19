@@ -30,8 +30,8 @@
                     <hr>
                 </div>
                 <div id="room-messages" class="mb-4"></div>
-                <div class="new-message">
-                    <div class="form-group">
+                <div class="new-message d-flex">
+                    <div class="form-group mb-0">
                         <input type="text" id="new-message-input" class="form-control" />
                     </div>
                     <button class="btn btn-primary" id="send-btn">Send</button>

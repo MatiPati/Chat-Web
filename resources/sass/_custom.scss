@@ -15,5 +15,10 @@ a{
   }
   .new-message{
     display: none;
+    .form-group{
+      width: 100%;
+      #new-message-input{
+      }
+    }
   }
 }

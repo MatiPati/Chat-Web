@@ -48,10 +48,8 @@ class Api extends Model
     {
         $client = new GuzzleHttp\Client();
         try {
-            // TODO: no &action=login at newer version!
             $res = $client->request('POST', 'http://azurix.pl:8080/login', [
                 'form_params' => [
-                    'action'   => 'login', // TODO: remove in next v
                     'login'    => $login,
                     'password' => $password
                 ]

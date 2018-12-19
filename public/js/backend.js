@@ -165,7 +165,7 @@ var drawRooms = function drawRooms(rooms) {
   var html = '';
   rooms = rooms.reverse();
   rooms.forEach(function (room) {
-    html += '<div class="card p-2 mb-1">' + '<button class="btn btn-outline-primary btn-sm d-block mb-2 change-room">' + room['room']['name'] + '</button>' + '<span class="d-none">' + room['room']['id'] + '</span>' + '<p class="m-0 small">by ' + room['room']['creator']['login'] + '</p>' + '</div>';
+    html += '<div class="card p-2 mb-1">' + '<button class="btn btn-outline-primary btn-sm d-block mb-2 change-room text-left">' + room['room']['name'] + '</button>' + '<span class="d-none">' + room['room']['id'] + '</span>' + '<p class="m-0 small">by ' + room['room']['creator']['login'] + '</p>' + '</div>';
   });
   document.querySelector('#room-list-box').innerHTML = html;
 };

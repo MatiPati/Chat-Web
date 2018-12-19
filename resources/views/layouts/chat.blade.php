@@ -6,7 +6,7 @@
 <body>
     @include('inc.navbar')
     <main class="my-5">
-        <div class="container">
+        <div class="container-fluid">
             @include('inc.messages')
             @yield('content')
         </div>

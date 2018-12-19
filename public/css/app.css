@@ -9542,3 +9542,7 @@ a {
   display: none;
 }
 
+#active-room .new-message .form-group {
+  width: 100%;
+}
+

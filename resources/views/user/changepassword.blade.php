@@ -5,7 +5,6 @@
     <div class="row">
         <div class="col-lg-6">
             <h1 class="mb-5">Change password</h1>
-            <p>Not working yet...</p>
             <form action="/changepassword" method="post">
                 <div class="form-group">
                     <input type="password" name="passwordOld" class="form-control" id="password"

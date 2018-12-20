@@ -89,13 +89,18 @@ const addUser = (userId) => {
     fetch(url + 'room/' + active_room + '/add/user?userId=' + userId, {
         method: 'POST'
     }).then((res) => {
-        res.json().then((data) => {
-            if (data == 200) {
-                console.log('User added!');
-                $('#roomAddForm').addClass('d-none');
-                $('#roomAddInput').val = '';
-            }
-        });
+        if (res.status === 200) {
+            res.json().then((data) => {
+                if (data === 200) {
+                    console.log('User added!');
+                    $('#roomAddForm').addClass('d-none');
+                    $('#roomAddInput').val = '';
+                }
+            });
+        } else if (res.status === 404) {
+            document.querySelector('#roomAddUserErrors').innerHTML = 'This user already is in this room!';
+            setInterval('document.querySelector(\'#roomAddUserErrors\').innerHTML = \'\';', 2000);
+        }
     });
 };
 
@@ -152,9 +157,10 @@ const newRoom = (name) => {
         if (res.status === 200) { //200 api response = OK! (room created)
             console.log('Room added!'); // TODO: production delete it!
             getRooms();
-        } else {
+        } else if (res.status === 404){
             // TODO: handle errors...
-            console.log('Not added!');
+            document.querySelector('#roomCreateErrors').innerHTML = 'You got a room with that name!'
+            setInterval('document.querySelector(\'#roomCreateErrors\').innerHTML = \'\';', 2000);
         }
     });
 };

@@ -9537,10 +9537,6 @@ a {
   cursor: pointer;
 }
 
-#active-room #roomAddForm {
-  display: flex;
-}
-
 #active-room #room-messages {
   height: 50vh;
   overflow-y: scroll;

@@ -6,7 +6,7 @@
         <div class="col-lg-2">
             <div>
                 <p>
-                    Welcome <strong>{{session('login')}}</strong><sup><span class="badge badge-secondary">[{{session('id')}}]</span></sup>
+                    Welcome <strong>{{session('login')}}</strong> <sup><span class="badge badge-secondary">[{{session('id')}}]</span></sup>
                 </p>
             </div>
             <div id="room-list-box">
@@ -30,7 +30,7 @@
                     <p class="mb-0"><span id="roomUsers"></span><span onclick="$('#roomAddForm').toggleClass('d-none')" class="badge badge-success position-relative" id="addFormShow" style="bottom: -0.8px;"><i class="bx bx-plus-circle" title="Add user to room"></i></span></p>
                     <div class="add-form d-none form-group d-none mt-2" id="roomAddForm">
                         <div class="d-flex">
-                            <input type="text" id="roomAddInput" class="form-control m-0" placeholder="UserID">
+                            <input type="text" id="roomAddInput" class="form-control m-0" placeholder="User login">
                             <button class="btn btn-sm btn-success" onclick="addUser($(this).prev().val())">Add new user to room</button>
                         </div>
                         <p class="mb-0 badge badge-danger" id="roomAddUserErrors"></p>

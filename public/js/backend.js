@@ -1,4 +1,4 @@
-const api_token = document.getElementById('token_id').innerText;
+//const api_token = document.getElementById('token_id').innerText;
 const user_id = document.getElementById('user_id').innerText;
 const url = 'http://azurix.pl:8080/';
 let active_room = false;
@@ -86,7 +86,7 @@ const getRoomUsers = (id) => {
 * Add user to room with REST API
 */
 const addUser = (userId) => {
-    fetch(url + 'room/' + active_room + '/add/user?userId=' + userId, {
+    fetch(url + 'room/' + active_room + '/add?login=' + userId, {
         method: 'POST'
     }).then((res) => {
         if (res.status === 200) {
@@ -98,8 +98,8 @@ const addUser = (userId) => {
                 }
             });
         } else if (res.status === 404) {
-            document.querySelector('#roomAddUserErrors').innerHTML = 'This user already is in this room!';
-            setInterval('document.querySelector(\'#roomAddUserErrors\').innerHTML = \'\';', 2000);
+            document.querySelector('#roomAddUserErrors').innerHTML = 'User already is in this room / user does not exist!';
+            setTimeout('document.querySelector(\'#roomAddUserErrors\').innerHTML = \'\';', 3000);
         }
     });
 };
@@ -148,7 +148,7 @@ const refreshMessages = () => {
 * Creating new room with REST API
 */
 const newRoom = (name) => {
-    fetch(url + 'room/new?creatorId=' + user_id + '&name=' + name, { //TODO: Patryk must change to `creatorId`
+    fetch(url + 'room/new?creatorId=' + user_id + '&name=' + name, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -159,8 +159,8 @@ const newRoom = (name) => {
             getRooms();
         } else if (res.status === 404){
             // TODO: handle errors...
-            document.querySelector('#roomCreateErrors').innerHTML = 'You got a room with that name!'
-            setInterval('document.querySelector(\'#roomCreateErrors\').innerHTML = \'\';', 2000);
+            document.querySelector('#roomCreateErrors').innerHTML = 'You got a room with that name!';
+            setTimeout('document.querySelector(\'#roomCreateErrors\').innerHTML = \'\';', 3000);
         }
     });
 };

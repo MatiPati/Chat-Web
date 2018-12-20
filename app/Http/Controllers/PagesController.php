@@ -18,12 +18,17 @@ class PagesController extends Controller
 
     public function getLogin ()
     {
-        return view('auth.login');
+        return view('user.auth.login');
     }
 
     public function getRegister  ()
     {
-        return view('auth.register');
+        return view('user.auth.register');
+    }
+
+    public function getChangePassword  ()
+    {
+        return view('user.changepassword');
     }
 
 }

@@ -1,0 +1,32 @@
+a{
+  transition: 0.3s color;
+}
+
+#room-list-box{
+  height: 50vh;
+  overflow-y: scroll;
+  margin-bottom: 1rem;
+}
+
+#active-room{
+  #addFormShow{
+    cursor: pointer;
+  }
+  #roomAddForm{
+  }
+  #room-messages{
+    height: 50vh;
+    overflow-y: scroll;
+    .delete-badge{
+      cursor: pointer;
+    }
+  }
+  .new-message{
+    display: none;
+    .form-group{
+      width: 100%;
+      #new-message-input{
+      }
+    }
+  }
+}

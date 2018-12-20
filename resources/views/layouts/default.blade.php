@@ -1,6 +1,6 @@
 <html>
 <head>
-    @include('layouts.head')
+    @include('inc.head')
 </head>
 <body>
     @include('inc.navbar')

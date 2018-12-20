@@ -75,4 +75,36 @@ class Api extends Model
         }
 
     }
+
+
+    /**
+     * API connection to auth user
+     *
+     * @param $passwordOld
+     * @param $passwordNew
+     * @return int
+     */
+    static public function changePassword ($passwordOld, $passwordNew)
+    {
+        $client = new GuzzleHttp\Client();
+        try {
+            $res = $client->request('PUT', 'http://azurix.pl:8080/user/'.session('id').'/password', [
+                'form_params' => [
+                    'password'    => $passwordOld,
+                    'newPassword' => $passwordNew
+                ]
+            ])->getBody();
+            if ($res == '200') {
+                // User successfully changed password
+                return 200;
+            } else {
+                // Bad old password
+                return 401;
+            }
+        } catch (GuzzleHttp\Exception\GuzzleException $e) {
+            // No API response
+            return 404;
+        }
+
+    }
 }

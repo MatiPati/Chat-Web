@@ -18,10 +18,13 @@ Route::GET('/', 'PagesController@getHome');
 // Main chat app
 Route::GET('/chat', 'ChatController@index')->middleware('logged');
 
-// User login handling
+// User login
 Route::GET('/login', 'PagesController@getLogin')->middleware('guest');
 Route::POST('/login', 'ChatController@login')->middleware('guest');
 Route::GET('/logout', 'ChatController@logout')->middleware('logged');
-// User register handling
+// User register
 Route::GET('/register', 'PagesController@getRegister')->middleware('guest');
 Route::POST('/register', 'ChatController@register')->middleware('guest');
+// User change password
+Route::GET('/changepassword', 'PagesController@getChangePassword')->middleware('logged');
+Route::POST('/changepassword', 'ChatController@changePassword')->middleware('logged');

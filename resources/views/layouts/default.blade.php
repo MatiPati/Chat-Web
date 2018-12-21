@@ -3,12 +3,10 @@
     @include('inc.head')
 </head>
 <body>
+<main>
     @include('inc.navbar')
-    <main class="my-5">
-        <div class="container-fluid">
-            @include('inc.messages')
-            @yield('content')
-        </div>
-    </main>
+    @yield('content')
+    @include('inc.footer')
+</main>
 </body>
 </html>

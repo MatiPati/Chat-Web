@@ -1,5 +1,5 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="/">Chat-Web</a>
+<nav class="navbar navbar-expand-lg navbar-custom">
+    <a class="navbar-brand" href="/">Ch-APP</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -31,12 +31,6 @@
                     </a>
                 </li>
             @endif
-            <li class="nav-item">
-                <a class="nav-link d-flex align-items-center" href="https://github.com/MatiPati"
-                   target="_blank">
-                    <i class="bx bxl-github h4 m-0 pr-2"></i>Github
-                </a>
-            </li>
         </ul>
     </div>
 </nav>

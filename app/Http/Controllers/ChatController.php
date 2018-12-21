@@ -68,7 +68,7 @@ class ChatController extends Controller
             return redirect('/chat');
         } else {
             // Bad credentials
-            return redirect('/login')->with('message', 'Bad credentials!');
+            return redirect('/login')->withErrors('Bad credentials!');
         }
     }
 

@@ -1,5 +1,6 @@
 //const api_token = document.getElementById('token_id').innerText;
 const user_id = document.getElementById('user_id').innerText;
+const user_login = document.getElementById('user_login').innerText;
 const url = 'http://azurix.pl:8080/';
 let active_room = false;
 let active_messages = ['1', '2', '3'];

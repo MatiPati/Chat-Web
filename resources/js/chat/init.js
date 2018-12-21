@@ -26,12 +26,12 @@ const initMessageSend = () => {
 
 // Needs initialization AFTER rooms on screen are rendered
 const initRoomChange = () => {
-    const changeRoomBtn = document.querySelectorAll(".change-room");
+    const changeRoomBtn = document.querySelectorAll(".room-to-change");
     changeRoomBtn.forEach((button) => {
         button.addEventListener('click', () => {
-            const id = button.nextElementSibling.innerHTML;
-            const name = button.innerHTML;
-            const creator = button.nextElementSibling.nextElementSibling.innerHTML;
+            const id = button.querySelector('.room-id').innerHTML;
+            const name = button.querySelector('.change-room-name').innerHTML;
+            const creator = button.querySelector('.room-creator').innerHTML;
             messagesCount = 20;
             console.log('Changing active room to room_id = ' + id);
             getRoomUsers(id);

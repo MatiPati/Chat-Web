@@ -1,31 +1,108 @@
+// Main elements
 a{
+  color: $link;
+  &:hover{
+    color: $link-hover;
+  }
+}
+hr{
+  width: 15rem;
+  height: 4px;
+  background: $font-light;
+}
+
+// Nav
+.navbar-custom {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  .navbar-brand{
+    color: $font-light;
+  }
+  .nav-link{
+    color: $font-light;
+  }
+  .navbar-toggler{
+    color: $font-light;
+  }
+}
+
+// Home page '/'
+#home-slider {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  background-image: linear-gradient(120deg, #0F2027, #203A43, #2C5364);
+  position: relative;
+  z-index: 1;
+  color: $font-light;
+  .slider-text{
+    margin-left: 10%;
+    h1{
+      font-size: 3.2rem;
+    }
+  }
+  .slider-img{
+    position: absolute;
+    right: 10%;
+    height: 70%;
+    width: 45%;
+    background-image: url("img/chat1.png");
+    background-size: contain;
+    background-position: center right;
+    background-repeat: no-repeat;
+  }
+  .github {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 10;
+    text-align: right;
+    color: $font-dark;
+  }
+  &::after {
+    content: "";
+    width: 100%;
+    height: 200px;
+    background-image: url("img/cut1.png");
+    background-position: top;
+    background-size: cover;
+    position: absolute;
+    bottom: 0;
+  }
+}
+
+a {
   transition: 0.3s color;
 }
 
-#room-list-box{
+#room-list-box {
   height: 50vh;
   overflow-y: scroll;
   margin-bottom: 1rem;
 }
 
-#active-room{
-  #addFormShow{
+#active-room {
+  #addFormShow {
     cursor: pointer;
   }
-  #roomAddForm{
+  #roomAddForm {
   }
-  #room-messages{
+  #room-messages {
     height: 50vh;
     overflow-y: scroll;
-    .delete-badge{
+    .delete-badge {
       cursor: pointer;
     }
   }
-  .new-message{
+  .new-message {
     display: none;
-    .form-group{
+    .form-group {
       width: 100%;
-      #new-message-input{
+      #new-message-input {
       }
     }
   }

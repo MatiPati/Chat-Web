@@ -1,5 +1,6 @@
 //const api_token = document.getElementById('token_id').innerText;
 const user_id = document.getElementById('user_id').innerText;
+const user_login = document.getElementById('user_login').innerText;
 const url = 'http://azurix.pl:8080/';
 let active_room = false;
 let active_messages = ['1', '2', '3'];
@@ -173,10 +174,10 @@ const drawRooms = (rooms) => {
     let html = '';
     rooms = rooms.reverse();
     rooms.forEach((room) => {
-        html += '<div class="card p-2 mb-1">' +
-            '<button class="btn btn-outline-primary btn-sm d-block mb-2 change-room text-left">' + room['room']['name'] + '</button>' +
-            '<span class="d-none">' + room['room']['id'] + '</span>' +
-            '<p class="m-0 small">by ' + room['room']['creator']['login'] + '</p>' +
+        html += '<div class="card room-to-change">' +
+            '<a class="d-block change-room-name">' + room['room']['name'] + '</a>' +
+            '<span class="room-id">' + room['room']['id'] + '</span>' +
+            '<p class="small room-creator">by ' + room['room']['creator']['login'] + '</p>' +
             '</div>';
     });
     document.querySelector('#room-list-box').innerHTML = html;
@@ -204,10 +205,10 @@ const drawRoom = (id, name, creator) => {
 const drawRoomUsers = (users) => {
     let usersHtml = '';
     if (Array.isArray(users)) {
-        users.forEach( (user) => {
+        users.forEach((user) => {
             usersHtml += '<span class="badge badge-secondary small">' + user['user']['login'] + '</span> ';
         });
-    } else{
+    } else {
         usersHtml = '<span>Nie ma żadnych gości!</span>';
     }
     document.querySelector('#roomUsers').innerHTML = usersHtml;
@@ -222,10 +223,17 @@ const drawMessages = (messages, newMessage, forceScroll) => {
     let lastSender = '';
     messages.forEach((message) => {
         //Every message drawing
-        if (message['senderId']['login'] !== lastSender) {
-            html += '<p class="mb-0 mt-3 h5"><span class="badge-primary badge">' + message['senderId']['login'] + '</span></p>';
+        if (message['senderId']['login'] === user_login) {
+            if (message['senderId']['login'] !== lastSender) {
+                html += '<p class="message-sender me"><span class="badge-primary badge"><i class=\'bx bx-id-card\'></i> ' + message['senderId']['login'] + '</span></p>';
+            }
+            html += '<p class="message-body me delete-p" oncontextmenu="deleteMessage(' + message['id'] + ');return false;">' + message['message'] + '</p>';
+        } else{
+            if (message['senderId']['login'] !== lastSender) {
+                html += '<p class="message-sender"><span class="badge-primary badge">' + message['senderId']['login'] + '</span></p>';
+            }
+            html += '<p class="message-body delete-p" oncontextmenu="deleteMessage(' + message['id'] + ');return false;">' + message['message'] + '</p>';
         }
-        html += '<p class="mb-0 delete-p" oncontextmenu="deleteMessage(' + message['id'] + ');return false;">' + message['message'] + '</p>';
         lastSender = message['senderId']['login'];
     });
     messagesElement.innerHTML = html;
@@ -272,12 +280,12 @@ const initMessageSend = () => {
 
 // Needs initialization AFTER rooms on screen are rendered
 const initRoomChange = () => {
-    const changeRoomBtn = document.querySelectorAll(".change-room");
+    const changeRoomBtn = document.querySelectorAll(".room-to-change");
     changeRoomBtn.forEach((button) => {
         button.addEventListener('click', () => {
-            const id = button.nextElementSibling.innerHTML;
-            const name = button.innerHTML;
-            const creator = button.nextElementSibling.nextElementSibling.innerHTML;
+            const id = button.querySelector('.room-id').innerHTML;
+            const name = button.querySelector('.change-room-name').innerHTML;
+            const creator = button.querySelector('.room-creator').innerHTML;
             messagesCount = 20;
             console.log('Changing active room to room_id = ' + id);
             getRoomUsers(id);

@@ -1793,36 +1793,113 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       rooms: [],
       activeRoom: {
+        name: '',
+        creator: {},
+        users: [],
         messages: []
       }
     };
   },
   created: function created() {
+    var _this = this;
+
+    // Get all rooms user is in
     this.getRooms();
+    setInterval(function () {
+      _this.getRooms();
+    }, 1000);
   },
   methods: {
     getRooms: function getRooms() {
-      var _this = this;
+      var _this2 = this;
 
       fetch('http://azurix.pl:8080/rooms').then(function (res) {
         return res.json();
       }).then(function (data) {
-        _this.rooms = data;
+        _this2.rooms = data;
       });
     },
-    changeRoom: function changeRoom(id) {
-      var _this2 = this;
+    changeRoom: function changeRoom(room) {
+      // Change active room
+      this.activeRoom = room; // Get active room users
 
-      fetch('http://azurix.pl:8080/room/' + id).then(function (res) {
+      this.getActiveRoomUsers(); // Get active room messages by API
+
+      this.getActiveRoomMessages();
+    },
+    getActiveRoomUsers: function getActiveRoomUsers() {
+      var _this3 = this;
+
+      fetch('http://azurix.pl:8080/room/' + this.activeRoom.id + '/users').then(function (res) {
         return res.json();
       }).then(function (data) {
-        _this2.activeRoom.messages = data;
+        _this3.activeRoom.users = data;
       });
+      setTimeout(function () {
+        _this3.getActiveRoomUsers(_this3.activeRoom);
+      }, 1000);
+    },
+    getActiveRoomMessages: function getActiveRoomMessages() {
+      var _this4 = this;
+
+      fetch('http://azurix.pl:8080/room/' + this.activeRoom.id).then(function (res) {
+        return res.json();
+      }).then(function (data) {
+        _this4.activeRoom.messages = data;
+      });
+      setTimeout(function () {
+        _this4.getActiveRoomMessages(_this4.activeRoom);
+      }, 1000);
+    },
+    createRoom: function createRoom(name) {
+      fetch('http://azurix.pl:8080/room');
     }
   }
 });
@@ -36371,71 +36448,215 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("h2", [_vm._v("Porting to VUE!")]),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "card p-3" },
-      [
-        _c("h4", [_vm._v("\n            All rooms list\n        ")]),
-        _vm._v(" "),
+  return _c("div", { attrs: { id: "chat-app" } }, [
+    _c("div", { staticClass: "left-col" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _c(
+        "div",
+        { attrs: { id: "room-list-box" } },
         _vm._l(_vm.rooms, function(room) {
-          return _c("div", { staticClass: "card", attrs: { id: room.id } }, [
-            _c("div", { staticClass: "card-header" }, [
-              _c(
-                "h5",
-                {
-                  on: {
-                    click: function($event) {
-                      _vm.changeRoom(room.id)
-                    }
-                  }
-                },
-                [_vm._v(_vm._s(room.name))]
-              )
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body p-2" }, [
-              _c("p", [
-                _vm._v(
-                  "\n                    Creator: " +
-                    _vm._s(room.creator.login) +
-                    "\n                "
-                )
+          return _c(
+            "div",
+            {
+              staticClass: "card room-to-change",
+              on: {
+                click: function($event) {
+                  _vm.changeRoom(room)
+                }
+              }
+            },
+            [
+              _c("a", { staticClass: "d-block change-room-name" }, [
+                _vm._v(_vm._s(room.name))
+              ]),
+              _vm._v(" "),
+              _c("p", { staticClass: "small room-creator" }, [
+                _vm._v(_vm._s(room.creator.login))
               ])
-            ])
-          ])
-        })
-      ],
-      2
-    ),
+            ]
+          )
+        }),
+        0
+      ),
+      _vm._v(" "),
+      _vm._m(1)
+    ]),
     _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "card mt-5" },
-      _vm._l(_vm.activeRoom.messages, function(message, i) {
-        return _c("div", { staticClass: "mb-2" }, [
-          i == 0 ||
-          _vm.activeRoom.messages[i].senderId.id !==
-            _vm.activeRoom.messages[i - 1].senderId.id
-            ? _c("p", { staticClass: "badge badge-danger d-block" }, [
-                _vm._v(
-                  "\n                " +
-                    _vm._s(message.senderId.login) +
-                    "\n            "
-                )
-              ])
-            : _vm._e(),
+    _c("div", { staticClass: "right-col" }, [
+      _c("div", { attrs: { id: "active-room" } }, [
+        _c("span", { attrs: { id: "active-room-id" } }),
+        _vm._v(" "),
+        _c("div", { staticClass: "header" }, [
+          _c("p", { attrs: { id: "active-room-name" } }, [
+            _vm._v(_vm._s(_vm.activeRoom.name))
+          ]),
           _vm._v(" "),
-          _c("span", [_vm._v(_vm._s(message.message))])
-        ])
-      }),
-      0
-    )
+          _c("p", { attrs: { id: "active-room-creator" } }, [
+            _vm._v(_vm._s(_vm.activeRoom.creator.login))
+          ]),
+          _vm._v(" "),
+          _c("p", { attrs: { id: "active-room-users" } }, [
+            _c(
+              "span",
+              { attrs: { id: "roomUsers" } },
+              _vm._l(_vm.activeRoom.users, function(user) {
+                return _c(
+                  "span",
+                  { staticClass: "badge badge-secondary small" },
+                  [_vm._v(_vm._s(user.user.login))]
+                )
+              }),
+              0
+            ),
+            _vm._v(" "),
+            _vm._m(2)
+          ]),
+          _vm._v(" "),
+          _vm._m(3)
+        ]),
+        _vm._v(" "),
+        _c("div", { attrs: { id: "room-messages" } }),
+        _vm._v(" "),
+        _vm._m(4)
+      ])
+    ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "profile-box" }, [
+      _c("div", { staticClass: "text-center" }, [
+        _c("i", { staticClass: "bx bx-id-card h1 mb-0" }),
+        _vm._v(" "),
+        _c("p", { staticClass: "m-0", attrs: { id: "user_login" } }, [
+          _vm._v("\n                    LOGIN TBD\n                ")
+        ]),
+        _vm._v(" "),
+        _c("a", { attrs: { href: "/" } }, [
+          _c("i", { staticClass: "bx bx-home" })
+        ]),
+        _vm._v(" "),
+        _c("a", { attrs: { href: "/logout" } }, [
+          _c("i", { staticClass: "bx bx-log-out" })
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "new-room-box" }, [
+      _c("div", { staticClass: "card p-3" }, [
+        _c("div", { staticClass: "form-group" }, [
+          _c("input", {
+            staticClass: "form-control",
+            attrs: {
+              type: "text",
+              id: "add-room-name",
+              placeholder: "Name of new room"
+            }
+          })
+        ]),
+        _vm._v(" "),
+        _c(
+          "button",
+          { staticClass: "btn btn-primary", attrs: { id: "add-room" } },
+          [_vm._v("Create new room")]
+        ),
+        _vm._v(" "),
+        _c("p", {
+          staticClass: "mb-0 badge badge-danger",
+          attrs: { id: "roomCreateErrors" }
+        })
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "span",
+      {
+        staticClass: "badge badge-success position-relative",
+        staticStyle: { bottom: "-0.8px" },
+        attrs: { id: "addFormShow" }
+      },
+      [
+        _c("i", {
+          staticClass: "bx bx-plus-circle",
+          attrs: { title: "Add user to room" }
+        })
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass: "add-form d-none form-group d-none mt-2",
+        attrs: { id: "roomAddForm" }
+      },
+      [
+        _c("div", { staticClass: "d-flex" }, [
+          _c("input", {
+            staticClass: "form-control m-0",
+            attrs: {
+              type: "text",
+              id: "roomAddInput",
+              placeholder: "User login"
+            }
+          }),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-sm btn-success",
+              attrs: { onclick: "addUser($(this).prev().val())" }
+            },
+            [
+              _vm._v(
+                "Add new user\n                            to room\n                        "
+              )
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("p", {
+          staticClass: "mb-0 badge badge-danger",
+          attrs: { id: "roomAddUserErrors" }
+        })
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "new-message d-flex" }, [
+      _c("div", { staticClass: "form-group mb-0" }, [
+        _c("input", {
+          staticClass: "form-control",
+          attrs: { type: "text", id: "new-message-input" }
+        })
+      ]),
+      _vm._v(" "),
+      _c(
+        "button",
+        { staticClass: "btn btn-primary", attrs: { id: "send-btn" } },
+        [_vm._v("Send")]
+      )
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -47788,15 +48009,14 @@ if (token) {
 /*!******************************************!*\
   !*** ./resources/js/components/Chat.vue ***!
   \******************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Chat_vue_vue_type_template_id_0d66c37a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Chat.vue?vue&type=template&id=0d66c37a& */ "./resources/js/components/Chat.vue?vue&type=template&id=0d66c37a&");
 /* harmony import */ var _Chat_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Chat.vue?vue&type=script&lang=js& */ "./resources/js/components/Chat.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Chat_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Chat_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -47826,7 +48046,7 @@ component.options.__file = "resources/js/components/Chat.vue"
 /*!*******************************************************************!*\
   !*** ./resources/js/components/Chat.vue?vue&type=script&lang=js& ***!
   \*******************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

@@ -32,19 +32,17 @@
         </div>
         <div class="right-col">
 
-            <div id="active-room">
+            <div id="active-room" v-show="activeRoom.visible">
                 <span id="active-room-id"></span>
                 <div class="header">
                     <p id="active-room-name">{{activeRoom.name}}</p>
                     <p id="active-room-creator">{{activeRoom.creator.login}}</p>
                     <p id="active-room-users">
                         <span id="roomUsers">
-                            <span v-for="user in activeRoom.users" class="badge badge-secondary small">{{user.user.login}}</span>
-                        </span>
-                        <span
-                                class="badge badge-success position-relative"
-                                id="addFormShow" style="bottom: -0.8px;"><i
-                                class="bx bx-plus-circle" title="Add user to room"></i>
+                            <span v-for="user in activeRoom.users" class="badge badge-secondary small mr-1">{{user.user.login}}</span>
+                        </span><span class="badge badge-success position-relative" id="addFormShow"
+                                     style="bottom: -0.8px;">
+                            <i class="bx bx-plus-circle" title="Add user to room"></i>
                         </span>
                     </p>
                     <div class="add-form d-none form-group d-none mt-2" id="roomAddForm">
@@ -57,12 +55,19 @@
                         <p class="mb-0 badge badge-danger" id="roomAddUserErrors"></p>
                     </div>
                 </div>
-                <div id="room-messages"></div>
+                <div id="room-messages">
+                    <div v-for="message in activeRoom.messages">
+                        <p class="message-sender">
+                            <span class="badge-primary badge">{{message.senderId.login}}</span>
+                        </p>
+                        <p class="message-body">{{message.message}}</p>
+                    </div>
+                </div>
                 <div class="new-message d-flex">
                     <div class="form-group mb-0">
-                        <input type="text" id="new-message-input" class="form-control">
+                        <input type="text" class="form-control" v-model="newMessage" v-on:keydown.enter="sendMessage">
                     </div>
-                    <button class="btn btn-primary" id="send-btn">Send</button>
+                    <button class="btn btn-primary" v-on:click="sendMessage()">Send</button>
                 </div>
             </div>
 
@@ -73,24 +78,27 @@
 <script>
 
     export default {
+        props: ['userId'],
+
         data() {
             return {
+                newUserInput: false,
                 rooms: [],
                 activeRoom: {
+                    visible: false,
                     name: '',
                     creator: {},
                     users: [],
                     messages: []
-                }
+                },
+                newMessage: ''
             }
         },
 
+        // On site load and VUE created
         created() {
             // Get all rooms user is in
             this.getRooms();
-            setInterval(() => {
-                this.getRooms()
-            }, 1000);
         },
 
         methods: {
@@ -100,6 +108,9 @@
                     .then(data => {
                         this.rooms = data
                     });
+                setTimeout(() => {
+                    this.getRooms()
+                }, 2000);
             },
             changeRoom(room) {
                 // Change active room
@@ -108,9 +119,10 @@
                 this.getActiveRoomUsers();
                 // Get active room messages by API
                 this.getActiveRoomMessages();
+                // Set flag to show active room
+                this.activeRoom.visible = true;
             },
             getActiveRoomUsers() {
-
                 fetch('http://azurix.pl:8080/room/' + this.activeRoom.id + '/users')
                     .then(res => res.json())
                     .then(data => {
@@ -118,17 +130,32 @@
                     });
                 setTimeout(() => {
                     this.getActiveRoomUsers(this.activeRoom)
-                }, 1000);
+                }, 2000);
             },
             getActiveRoomMessages() {
                 fetch('http://azurix.pl:8080/room/' + this.activeRoom.id)
                     .then(res => res.json())
                     .then(data => {
-                        this.activeRoom.messages = data
+                        this.activeRoom.messages = data.reverse()
                     });
                 setTimeout(() => {
                     this.getActiveRoomMessages(this.activeRoom)
                 }, 1000);
+            },
+            sendMessage() {
+                fetch('http://azurix.pl:8080/room/' + this.activeRoom.id + '/message?senderId=' + this.userId + '&message=' + this.newMessage, {
+                    method: 'POST'
+                }).then(res => {
+                    if (res.status === 200) {
+                        console.log('Message sent!');
+                        // Clear new message Var
+                        this.newMessage = '';
+                        // Synchronize messages
+                        this.getActiveRoomMessages();
+                    } else {
+                        console.log('Message not sent!');
+                    }
+                });
             },
             createRoom(name) {
                 fetch('http://azurix.pl:8080/room')

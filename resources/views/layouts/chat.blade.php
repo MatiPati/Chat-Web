@@ -7,7 +7,7 @@
     @include('inc.messages')
     {{--@yield('content')--}}
     <div id="app">
-        <chat></chat>
+        <chat :user-id="{{session('id')}}"></chat>
     </div>
 </main>
 </body>

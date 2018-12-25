@@ -1835,36 +1835,44 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['userId'],
   data: function data() {
     return {
+      newUserInput: false,
       rooms: [],
       activeRoom: {
+        visible: false,
         name: '',
         creator: {},
         users: [],
         messages: []
-      }
+      },
+      newMessage: ''
     };
   },
+  // On site load and VUE created
   created: function created() {
-    var _this = this;
-
     // Get all rooms user is in
     this.getRooms();
-    setInterval(function () {
-      _this.getRooms();
-    }, 1000);
   },
   methods: {
     getRooms: function getRooms() {
-      var _this2 = this;
+      var _this = this;
 
       fetch('http://azurix.pl:8080/rooms').then(function (res) {
         return res.json();
       }).then(function (data) {
-        _this2.rooms = data;
+        _this.rooms = data;
       });
+      setTimeout(function () {
+        _this.getRooms();
+      }, 2000);
     },
     changeRoom: function changeRoom(room) {
       // Change active room
@@ -1872,31 +1880,50 @@ __webpack_require__.r(__webpack_exports__);
 
       this.getActiveRoomUsers(); // Get active room messages by API
 
-      this.getActiveRoomMessages();
+      this.getActiveRoomMessages(); // Set flag to show active room
+
+      this.activeRoom.visible = true;
     },
     getActiveRoomUsers: function getActiveRoomUsers() {
-      var _this3 = this;
+      var _this2 = this;
 
       fetch('http://azurix.pl:8080/room/' + this.activeRoom.id + '/users').then(function (res) {
         return res.json();
       }).then(function (data) {
-        _this3.activeRoom.users = data;
+        _this2.activeRoom.users = data;
       });
       setTimeout(function () {
-        _this3.getActiveRoomUsers(_this3.activeRoom);
-      }, 1000);
+        _this2.getActiveRoomUsers(_this2.activeRoom);
+      }, 2000);
     },
     getActiveRoomMessages: function getActiveRoomMessages() {
-      var _this4 = this;
+      var _this3 = this;
 
       fetch('http://azurix.pl:8080/room/' + this.activeRoom.id).then(function (res) {
         return res.json();
       }).then(function (data) {
-        _this4.activeRoom.messages = data;
+        _this3.activeRoom.messages = data.reverse();
       });
       setTimeout(function () {
-        _this4.getActiveRoomMessages(_this4.activeRoom);
+        _this3.getActiveRoomMessages(_this3.activeRoom);
       }, 1000);
+    },
+    sendMessage: function sendMessage() {
+      var _this4 = this;
+
+      fetch('http://azurix.pl:8080/room/' + this.activeRoom.id + '/message?senderId=' + this.userId + '&message=' + this.newMessage, {
+        method: 'POST'
+      }).then(function (res) {
+        if (res.status === 200) {
+          console.log('Message sent!'); // Clear new message Var
+
+          _this4.newMessage = ''; // Synchronize messages
+
+          _this4.getActiveRoomMessages();
+        } else {
+          console.log('Message not sent!');
+        }
+      });
     },
     createRoom: function createRoom(name) {
       fetch('http://azurix.pl:8080/room');
@@ -36484,42 +36511,118 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "right-col" }, [
-      _c("div", { attrs: { id: "active-room" } }, [
-        _c("span", { attrs: { id: "active-room-id" } }),
-        _vm._v(" "),
-        _c("div", { staticClass: "header" }, [
-          _c("p", { attrs: { id: "active-room-name" } }, [
-            _vm._v(_vm._s(_vm.activeRoom.name))
-          ]),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.activeRoom.visible,
+              expression: "activeRoom.visible"
+            }
+          ],
+          attrs: { id: "active-room" }
+        },
+        [
+          _c("span", { attrs: { id: "active-room-id" } }),
           _vm._v(" "),
-          _c("p", { attrs: { id: "active-room-creator" } }, [
-            _vm._v(_vm._s(_vm.activeRoom.creator.login))
-          ]),
-          _vm._v(" "),
-          _c("p", { attrs: { id: "active-room-users" } }, [
-            _c(
-              "span",
-              { attrs: { id: "roomUsers" } },
-              _vm._l(_vm.activeRoom.users, function(user) {
-                return _c(
-                  "span",
-                  { staticClass: "badge badge-secondary small" },
-                  [_vm._v(_vm._s(user.user.login))]
-                )
-              }),
-              0
-            ),
+          _c("div", { staticClass: "header" }, [
+            _c("p", { attrs: { id: "active-room-name" } }, [
+              _vm._v(_vm._s(_vm.activeRoom.name))
+            ]),
             _vm._v(" "),
-            _vm._m(2)
+            _c("p", { attrs: { id: "active-room-creator" } }, [
+              _vm._v(_vm._s(_vm.activeRoom.creator.login))
+            ]),
+            _vm._v(" "),
+            _c("p", { attrs: { id: "active-room-users" } }, [
+              _c(
+                "span",
+                { attrs: { id: "roomUsers" } },
+                _vm._l(_vm.activeRoom.users, function(user) {
+                  return _c(
+                    "span",
+                    { staticClass: "badge badge-secondary small mr-1" },
+                    [_vm._v(_vm._s(user.user.login))]
+                  )
+                }),
+                0
+              ),
+              _vm._m(2)
+            ]),
+            _vm._v(" "),
+            _vm._m(3)
           ]),
           _vm._v(" "),
-          _vm._m(3)
-        ]),
-        _vm._v(" "),
-        _c("div", { attrs: { id: "room-messages" } }),
-        _vm._v(" "),
-        _vm._m(4)
-      ])
+          _c(
+            "div",
+            { attrs: { id: "room-messages" } },
+            _vm._l(_vm.activeRoom.messages, function(message) {
+              return _c("div", [
+                _c("p", { staticClass: "message-sender" }, [
+                  _c("span", { staticClass: "badge-primary badge" }, [
+                    _vm._v(_vm._s(message.senderId.login))
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("p", { staticClass: "message-body" }, [
+                  _vm._v(_vm._s(message.message))
+                ])
+              ])
+            }),
+            0
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "new-message d-flex" }, [
+            _c("div", { staticClass: "form-group mb-0" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.newMessage,
+                    expression: "newMessage"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text" },
+                domProps: { value: _vm.newMessage },
+                on: {
+                  keydown: function($event) {
+                    if (
+                      !("button" in $event) &&
+                      _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                    ) {
+                      return null
+                    }
+                    return _vm.sendMessage($event)
+                  },
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.newMessage = $event.target.value
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary",
+                on: {
+                  click: function($event) {
+                    _vm.sendMessage()
+                  }
+                }
+              },
+              [_vm._v("Send")]
+            )
+          ])
+        ]
+      )
     ])
   ])
 }
@@ -36636,25 +36739,6 @@ var staticRenderFns = [
         })
       ]
     )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "new-message d-flex" }, [
-      _c("div", { staticClass: "form-group mb-0" }, [
-        _c("input", {
-          staticClass: "form-control",
-          attrs: { type: "text", id: "new-message-input" }
-        })
-      ]),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "btn btn-primary", attrs: { id: "send-btn" } },
-        [_vm._v("Send")]
-      )
-    ])
   }
 ]
 render._withStripped = true

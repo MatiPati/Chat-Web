@@ -12,3 +12,4 @@
 <link rel='stylesheet' href='https://unpkg.com/boxicons@1.8.1/css/boxicons.min.css'>
 {{-- Scripts --}}
 <script src="/js/app.js" type="application/javascript" defer></script>
+<script src="/js/chat.js" type="application/javascript" defer></script>

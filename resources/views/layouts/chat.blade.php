@@ -5,10 +5,8 @@
 <body>
 <main>
     @include('inc.messages')
-    {{--@yield('content')--}}
-    <div id="app">
-        <chat :user-id="{{session('id')}}"></chat>
-    </div>
+    @yield('content')
+
 </main>
 </body>
 </html>

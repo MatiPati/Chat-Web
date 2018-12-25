@@ -5,7 +5,7 @@
                 <div class="text-center">
                     <i class='bx bx-id-card h1 mb-0'></i>
                     <p class="m-0" id="user_login">
-                        LOGIN TBD
+                        {{userLogin}}
                     </p>
                     <a href="/"><i class='bx bx-home'></i></a>
                     <a href="/logout"><i class='bx bx-log-out'></i></a>
@@ -23,7 +23,8 @@
             <div class="new-room-box">
                 <div class="card p-3">
                     <div class="form-group">
-                        <input type="text" class="form-control" id="add-room-name" placeholder="Name of new room" v-model="newRoom.name" v-on:keydown.enter="createRoom()">
+                        <input type="text" class="form-control" id="add-room-name" placeholder="Name of new room"
+                               v-model="newRoom.name" v-on:keydown.enter="createRoom()">
                     </div>
                     <button id="add-room" class="btn btn-primary" v-on:click="createRoom()">Create new room</button>
                     <p class="mb-0 badge badge-danger" id="roomCreateErrors"></p>
@@ -58,8 +59,9 @@
                     </div>
                 </div>
                 <div id="room-messages">
-                    <div v-for="message in activeRoom.messages">
-                        <p class="message-sender">
+                    <div v-for="(message, i) in activeRoom.messages">
+                        <p class="message-sender"
+                           v-if="i == 0|| activeRoom.messages[i].senderId.id !== activeRoom.messages[i - 1].senderId.id">
                             <span class="badge-primary badge">{{message.senderId.login}}</span>
                         </p>
                         <p class="message-body">{{message.message}}</p>
@@ -67,7 +69,8 @@
                 </div>
                 <div class="new-message d-flex">
                     <div class="form-group mb-0">
-                        <input type="text" class="form-control" v-model="newMessage.message" v-on:keydown.enter="sendMessage()">
+                        <input type="text" class="form-control" v-model="newMessage.message"
+                               v-on:keydown.enter="sendMessage()">
                     </div>
                     <button class="btn btn-primary" v-on:click="sendMessage()">Send</button>
                 </div>
@@ -80,7 +83,7 @@
 <script>
 
     export default {
-        props: ['userId'],
+        props: ['userId', 'userLogin'],
 
         data() {
             return {
@@ -92,7 +95,15 @@
                     name: '',
                     creator: {},
                     users: [],
-                    messages: [],
+                    messages: [
+                        {
+                            id: 0,
+                            senderId: {
+                                login: 'dump'
+                            }
+                        }
+                    ],
+                    messagesCount: 20,
                 },
                 // Adding users to room
                 addUser: {
@@ -107,6 +118,10 @@
                 newMessage: {
                     message: '',
                 },
+                // Timeouts
+                roomsTimeout: true,
+                usersTimeout: true,
+                messagesTimeout: true,
             }
         },
 
@@ -114,6 +129,7 @@
         created() {
             // Get all rooms user is in
             this.getRooms();
+            this.initTimeouts();
         },
 
         methods: {
@@ -123,14 +139,11 @@
                     .then(data => {
                         this.rooms = data
                     });
-                setTimeout(() => {
-                    this.getRooms()
-                }, 2000);
             },
             changeRoom(room) {
                 // Change active room
                 this.activeRoom.name = room.room.name;
-                this.activeRoom.id = room.room.id   ;
+                this.activeRoom.id = room.room.id;
                 this.activeRoom.creator.login = room.user.login;
                 // Get active room users
                 this.getActiveRoomUsers();
@@ -138,6 +151,7 @@
                 this.getActiveRoomMessages();
                 // Set flag to show active room
                 this.activeRoom.visible = true;
+                this.initTimeouts();
             },
             getActiveRoomUsers() {
                 fetch('http://azurix.pl:8080/room/' + this.activeRoom.id + '/users')
@@ -145,37 +159,58 @@
                     .then(data => {
                         this.activeRoom.users = data
                     });
-                setTimeout(() => {
-                    this.getActiveRoomUsers(this.activeRoom)
-                }, 2000);
             },
             addUserToActiveRoom() {
                 fetch('http://azurix.pl:8080/room/' + this.activeRoom.id + '/add?login=' + this.addUser.login, {
                     method: 'POST'
                 }).then(res => {
-                        if (res.status === 200) {
-                            console.log('User added!');
-                            // Hide adding user form
-                            this.addUser.visible = false;
-                            // Clear new user login input
-                            this.addUser.login = '';
-                            // Synchronize users
-                            this.getActiveRoomUsers();
+                    if (res.status === 200) {
+                        console.log('User added!');
+                        // Hide adding user form
+                        this.addUser.visible = false;
+                        // Clear new user login input
+                        this.addUser.login = '';
+                        // Synchronize users
+                        this.getActiveRoomUsers();
+                    } else {
+                        // TODO: handle error message
+                        console.log('User not added!');
+                    }
+                });
+            },
+            getActiveRoomMessages() {
+                fetch('http://azurix.pl:8080/room/' + this.activeRoom.id + '?count=' + this.activeRoom.messagesCount + 1)
+                    .then(res => res.json())
+                    .then(data => {
+                        // Check if room has messages inside
+                        if (data.length > 0) {
+                            // If last message changed
+                            // TODO: MAKE IT WORK...
+                            if (data[data.length - 1].id !== this.activeRoom.messages[0]['id']) {
+                                // Add this message to count
+                                this.activeRoom.messagesCount++;
+                                this.activeRoom.messages = data.reverse(); // Wo ho ah
+                                // Scroll to bottom -> show new message
+                                this.scrollMessages();
+                                // Debug
+                                console.log('Messages refreshed!');
+                            }
                         } else {
-                            // TODO: handle error message
-                            console.log('User not added!');
+                            // Room has no messages
+                            this.activeRoom.messages = [
+                                {
+                                    id: 0,
+                                    senderId: {
+                                        login: 'dump'
+                                    }
+                                }
+                            ];
                         }
                     });
             },
-            getActiveRoomMessages() {
-                fetch('http://azurix.pl:8080/room/' + this.activeRoom.id)
-                    .then(res => res.json())
-                    .then(data => {
-                        this.activeRoom.messages = data.reverse()
-                    });
-                setTimeout(() => {
-                    this.getActiveRoomMessages(this.activeRoom)
-                }, 1000);
+            scrollMessages() {
+                const element = this.$el.querySelector("#room-messages");
+                element.scrollTop = element.scrollHeight;
             },
             sendMessage() {
                 fetch('http://azurix.pl:8080/room/' + this.activeRoom.id + '/message?senderId=' + this.userId + '&message=' + this.newMessage.message, {
@@ -201,7 +236,29 @@
                 this.newRoom.name = '';
                 // Refresh rooms
                 this.getRooms();
-            }
+            },
+            initTimeouts() {
+                if (this.roomsTimeout) {
+                    setInterval(() => {
+                        this.getRooms()
+                    }, 2000);
+                    this.roomsTimeout = false;
+                }
+                if (this.activeRoom.visible) {
+                    if (this.usersTimeout) {
+                        setInterval(() => {
+                            this.getActiveRoomUsers()
+                        }, 2000);
+                        this.usersTimeout = false;
+                    }
+                    if (this.messagesTimeout) {
+                        setInterval(() => {
+                            this.getActiveRoomMessages()
+                        }, 1000);
+                        this.messagesTimeout = false;
+                    }
+                }
+            },
         }
     }
 

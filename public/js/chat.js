@@ -174,8 +174,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['userId'],
+  props: ['userId', 'userLogin'],
   data: function data() {
     return {
       // List of user-visible rooms
@@ -186,7 +189,13 @@ __webpack_require__.r(__webpack_exports__);
         name: '',
         creator: {},
         users: [],
-        messages: []
+        messages: [{
+          id: 0,
+          senderId: {
+            login: 'dump'
+          }
+        }],
+        messagesCount: 20
       },
       // Adding users to room
       addUser: {
@@ -200,13 +209,18 @@ __webpack_require__.r(__webpack_exports__);
       // Sending messages
       newMessage: {
         message: ''
-      }
+      },
+      // Timeouts
+      roomsTimeout: true,
+      usersTimeout: true,
+      messagesTimeout: true
     };
   },
   // On site load and VUE created
   created: function created() {
     // Get all rooms user is in
     this.getRooms();
+    this.initTimeouts();
   },
   methods: {
     getRooms: function getRooms() {
@@ -217,9 +231,6 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (data) {
         _this.rooms = data;
       });
-      setTimeout(function () {
-        _this.getRooms();
-      }, 2000);
     },
     changeRoom: function changeRoom(room) {
       // Change active room
@@ -232,6 +243,7 @@ __webpack_require__.r(__webpack_exports__);
       this.getActiveRoomMessages(); // Set flag to show active room
 
       this.activeRoom.visible = true;
+      this.initTimeouts();
     },
     getActiveRoomUsers: function getActiveRoomUsers() {
       var _this2 = this;
@@ -241,9 +253,6 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (data) {
         _this2.activeRoom.users = data;
       });
-      setTimeout(function () {
-        _this2.getActiveRoomUsers(_this2.activeRoom);
-      }, 2000);
     },
     addUserToActiveRoom: function addUserToActiveRoom() {
       var _this3 = this;
@@ -268,14 +277,38 @@ __webpack_require__.r(__webpack_exports__);
     getActiveRoomMessages: function getActiveRoomMessages() {
       var _this4 = this;
 
-      fetch('http://azurix.pl:8080/room/' + this.activeRoom.id).then(function (res) {
+      fetch('http://azurix.pl:8080/room/' + this.activeRoom.id + '?count=' + this.activeRoom.messagesCount + 1).then(function (res) {
         return res.json();
       }).then(function (data) {
-        _this4.activeRoom.messages = data.reverse();
+        // Check if room has messages inside
+        if (data.length > 0) {
+          // If last message changed
+          // TODO: MAKE IT WORK...
+          if (data[data.length - 1].id !== _this4.activeRoom.messages[0]['id']) {
+            // Add this message to count
+            _this4.activeRoom.messagesCount++;
+            _this4.activeRoom.messages = data.reverse(); // Wo ho ah
+            // Scroll to bottom -> show new message
+
+            _this4.scrollMessages(); // Debug
+
+
+            console.log('Messages refreshed!');
+          }
+        } else {
+          // Room has no messages
+          _this4.activeRoom.messages = [{
+            id: 0,
+            senderId: {
+              login: 'dump'
+            }
+          }];
+        }
       });
-      setTimeout(function () {
-        _this4.getActiveRoomMessages(_this4.activeRoom);
-      }, 1000);
+    },
+    scrollMessages: function scrollMessages() {
+      var element = this.$el.querySelector("#room-messages");
+      element.scrollTop = element.scrollHeight;
     },
     sendMessage: function sendMessage() {
       var _this5 = this;
@@ -303,6 +336,32 @@ __webpack_require__.r(__webpack_exports__);
       this.newRoom.name = ''; // Refresh rooms
 
       this.getRooms();
+    },
+    initTimeouts: function initTimeouts() {
+      var _this6 = this;
+
+      if (this.roomsTimeout) {
+        setInterval(function () {
+          _this6.getRooms();
+        }, 2000);
+        this.roomsTimeout = false;
+      }
+
+      if (this.activeRoom.visible) {
+        if (this.usersTimeout) {
+          setInterval(function () {
+            _this6.getActiveRoomUsers();
+          }, 2000);
+          this.usersTimeout = false;
+        }
+
+        if (this.messagesTimeout) {
+          setInterval(function () {
+            _this6.getActiveRoomMessages();
+          }, 1000);
+          this.messagesTimeout = false;
+        }
+      }
     }
   }
 });
@@ -794,7 +853,23 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { attrs: { id: "chat-app" } }, [
     _c("div", { staticClass: "left-col" }, [
-      _vm._m(0),
+      _c("div", { staticClass: "profile-box" }, [
+        _c("div", { staticClass: "text-center" }, [
+          _c("i", { staticClass: "bx bx-id-card h1 mb-0" }),
+          _vm._v(" "),
+          _c("p", { staticClass: "m-0", attrs: { id: "user_login" } }, [
+            _vm._v(
+              "\n                    " +
+                _vm._s(_vm.userLogin) +
+                "\n                "
+            )
+          ]),
+          _vm._v(" "),
+          _vm._m(0),
+          _vm._v(" "),
+          _vm._m(1)
+        ])
+      ]),
       _vm._v(" "),
       _c(
         "div",
@@ -1027,13 +1102,17 @@ var render = function() {
           _c(
             "div",
             { attrs: { id: "room-messages" } },
-            _vm._l(_vm.activeRoom.messages, function(message) {
+            _vm._l(_vm.activeRoom.messages, function(message, i) {
               return _c("div", [
-                _c("p", { staticClass: "message-sender" }, [
-                  _c("span", { staticClass: "badge-primary badge" }, [
-                    _vm._v(_vm._s(message.senderId.login))
-                  ])
-                ]),
+                i == 0 ||
+                _vm.activeRoom.messages[i].senderId.id !==
+                  _vm.activeRoom.messages[i - 1].senderId.id
+                  ? _c("p", { staticClass: "message-sender" }, [
+                      _c("span", { staticClass: "badge-primary badge" }, [
+                        _vm._v(_vm._s(message.senderId.login))
+                      ])
+                    ])
+                  : _vm._e(),
                 _vm._v(" "),
                 _c("p", { staticClass: "message-body" }, [
                   _vm._v(_vm._s(message.message))
@@ -1100,22 +1179,16 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "profile-box" }, [
-      _c("div", { staticClass: "text-center" }, [
-        _c("i", { staticClass: "bx bx-id-card h1 mb-0" }),
-        _vm._v(" "),
-        _c("p", { staticClass: "m-0", attrs: { id: "user_login" } }, [
-          _vm._v("\n                    LOGIN TBD\n                ")
-        ]),
-        _vm._v(" "),
-        _c("a", { attrs: { href: "/" } }, [
-          _c("i", { staticClass: "bx bx-home" })
-        ]),
-        _vm._v(" "),
-        _c("a", { attrs: { href: "/logout" } }, [
-          _c("i", { staticClass: "bx bx-log-out" })
-        ])
-      ])
+    return _c("a", { attrs: { href: "/" } }, [
+      _c("i", { staticClass: "bx bx-home" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("a", { attrs: { href: "/logout" } }, [
+      _c("i", { staticClass: "bx bx-log-out" })
     ])
   }
 ]

@@ -168,7 +168,7 @@
                     method: 'POST'
                 }).then(res => {
                     if (res.status === 200) {
-                        console.log('User added!');
+                        console.log('User [' + this.addUser.login + '] to room [' + this.activeRoom.id + '] added!');
                         // Hide adding user form
                         this.addUser.visible = false;
                         // Clear new user login input
@@ -194,7 +194,7 @@
                                 // Scroll to bottom to show new message
                                 this.scrollMessages();
                                 // Debug
-                                console.log('Messages refreshed!');
+                                console.log('Messages in active room refreshed!');
                             }
                         } else {
                             // Room has no messages
@@ -220,7 +220,7 @@
                     method: 'POST'
                 }).then(res => {
                     if (res.status === 200) {
-                        console.log('Message sent!');
+                        console.log('Message sent to room [' + this.activeRoom.name + ']');
                         // Clear new message input
                         this.newMessage.message = '';
                         // Synchronize messages

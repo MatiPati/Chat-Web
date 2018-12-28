@@ -265,7 +265,7 @@ __webpack_require__.r(__webpack_exports__);
         method: 'POST'
       }).then(function (res) {
         if (res.status === 200) {
-          console.log('User added!'); // Hide adding user form
+          console.log('User [' + _this3.addUser.login + '] to room [' + _this3.activeRoom.id + '] added!'); // Hide adding user form
 
           _this3.addUser.visible = false; // Clear new user login input
 
@@ -295,7 +295,7 @@ __webpack_require__.r(__webpack_exports__);
             _this4.scrollMessages(); // Debug
 
 
-            console.log('Messages refreshed!');
+            console.log('Messages in active room refreshed!');
           }
         } else {
           // Room has no messages
@@ -324,7 +324,7 @@ __webpack_require__.r(__webpack_exports__);
         method: 'POST'
       }).then(function (res) {
         if (res.status === 200) {
-          console.log('Message sent!'); // Clear new message input
+          console.log('Message sent to room [' + _this6.activeRoom.name + ']'); // Clear new message input
 
           _this6.newMessage.message = ''; // Synchronize messages
 

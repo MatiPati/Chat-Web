@@ -1,6 +1,6 @@
 <template>
     <div id="chat-app">
-        <div class="left-col">
+        <div class="left-col" v-show="leftColVisible">
             <div class="profile-box">
                 <div class="text-center">
                     <i class='bx bx-id-card h1 mb-0'></i>
@@ -38,11 +38,14 @@
                 <div class="header">
                     <p id="active-room-name">{{activeRoom.name}}</p>
                     <p id="active-room-creator">{{activeRoom.creator.login}}</p>
+                    <div class="rooms-shower" @click="switchLeftCol">
+                        <i class='bx bx-menu'></i>
+                    </div>
                     <p id="active-room-users">
                         <span id="roomUsers">
                             <span v-for="user in activeRoom.users" class="badge badge-secondary small mr-1">{{user.user.login}}</span>
                         </span><span class="badge badge-success position-relative" id="addFormShow"
-                                     style="bottom: -0.8px;">
+                                     style="bottom: -0.8px; z-index: 90">
                             <i class="bx bx-plus-circle" title="Add user to room"
                                v-on:click="addUser.visible = !addUser.visible"></i>
                         </span>
@@ -120,6 +123,8 @@
                 newMessage: {
                     message: '',
                 },
+                // RWD
+                leftColVisible: true,
                 // Timeouts
                 roomsTimeout: true,
                 usersTimeout: true,
@@ -155,6 +160,8 @@
                 // Set flag to show active room
                 this.activeRoom.visible = true;
                 this.initTimeouts();
+                // RWD: hide rooms col
+                this.switchLeftCol();
             },
             getActiveRoomUsers() {
                 fetch('http://azurix.pl:8080/room/' + this.activeRoom.id + '/users')
@@ -210,7 +217,7 @@
                     });
             },
             scrollMessages() {
-                setTimeout( () => {
+                setTimeout(() => {
                     const element = this.$el.querySelector("#room-messages");
                     element.scrollTop = element.scrollHeight;
                 }, 100);
@@ -260,6 +267,13 @@
                         }, 1000);
                         this.messagesTimeout = false;
                     }
+                }
+            },
+            switchLeftCol() {
+                // Only on mobile
+                if (innerWidth < 768) {
+                    console.log(1);
+                    this.leftColVisible = !this.leftColVisible;
                 }
             },
         }

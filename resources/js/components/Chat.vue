@@ -87,6 +87,8 @@
 
         data() {
             return {
+                // Default var
+                defaultMessagesCount: 20,
                 // List of user-visible rooms
                 rooms: [],
                 // Active room
@@ -99,11 +101,11 @@
                         {
                             id: 0,
                             senderId: {
-                                login: 'dump'
+                                login: 'No messages'
                             }
                         }
                     ],
-                    messagesCount: 20,
+                    messagesCount: this.defaultMessagesCount,
                 },
                 // Adding users to room
                 addUser: {
@@ -145,6 +147,7 @@
                 this.activeRoom.name = room.room.name;
                 this.activeRoom.id = room.room.id;
                 this.activeRoom.creator.login = room.user.login;
+                this.activeRoom.messagesCount = this.defaultMessagesCount; // Reset messages count
                 // Get active room users
                 this.getActiveRoomUsers();
                 // Get active room messages by API
@@ -179,18 +182,16 @@
                 });
             },
             getActiveRoomMessages() {
-                fetch('http://azurix.pl:8080/room/' + this.activeRoom.id + '?count=' + this.activeRoom.messagesCount + 1)
+                fetch('http://azurix.pl:8080/room/' + this.activeRoom.id + '?count=' + this.activeRoom.messagesCount)
                     .then(res => res.json())
                     .then(data => {
                         // Check if room has messages inside
                         if (data.length > 0) {
                             // If last message changed
-                            // TODO: MAKE IT WORK...
-                            if (data[data.length - 1].id !== this.activeRoom.messages[0]['id']) {
-                                // Add this message to count
+                            if (data[0].id !== this.activeRoom.messages[this.activeRoom.messages.length - 1]['id']) {
                                 this.activeRoom.messagesCount++;
                                 this.activeRoom.messages = data.reverse(); // Wo ho ah
-                                // Scroll to bottom -> show new message
+                                // Scroll to bottom to show new message
                                 this.scrollMessages();
                                 // Debug
                                 console.log('Messages refreshed!');
@@ -201,7 +202,7 @@
                                 {
                                     id: 0,
                                     senderId: {
-                                        login: 'dump'
+                                        login: 'No messages'
                                     }
                                 }
                             ];
@@ -209,8 +210,10 @@
                     });
             },
             scrollMessages() {
-                const element = this.$el.querySelector("#room-messages");
-                element.scrollTop = element.scrollHeight;
+                setTimeout( () => {
+                    const element = this.$el.querySelector("#room-messages");
+                    element.scrollTop = element.scrollHeight;
+                }, 100);
             },
             sendMessage() {
                 fetch('http://azurix.pl:8080/room/' + this.activeRoom.id + '/message?senderId=' + this.userId + '&message=' + this.newMessage.message, {

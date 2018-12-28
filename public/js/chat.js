@@ -181,6 +181,8 @@ __webpack_require__.r(__webpack_exports__);
   props: ['userId', 'userLogin'],
   data: function data() {
     return {
+      // Default var
+      defaultMessagesCount: 20,
       // List of user-visible rooms
       rooms: [],
       // Active room
@@ -192,10 +194,10 @@ __webpack_require__.r(__webpack_exports__);
         messages: [{
           id: 0,
           senderId: {
-            login: 'dump'
+            login: 'No messages'
           }
         }],
-        messagesCount: 20
+        messagesCount: this.defaultMessagesCount
       },
       // Adding users to room
       addUser: {
@@ -236,7 +238,9 @@ __webpack_require__.r(__webpack_exports__);
       // Change active room
       this.activeRoom.name = room.room.name;
       this.activeRoom.id = room.room.id;
-      this.activeRoom.creator.login = room.user.login; // Get active room users
+      this.activeRoom.creator.login = room.user.login;
+      this.activeRoom.messagesCount = this.defaultMessagesCount; // Reset messages count
+      // Get active room users
 
       this.getActiveRoomUsers(); // Get active room messages by API
 
@@ -277,18 +281,16 @@ __webpack_require__.r(__webpack_exports__);
     getActiveRoomMessages: function getActiveRoomMessages() {
       var _this4 = this;
 
-      fetch('http://azurix.pl:8080/room/' + this.activeRoom.id + '?count=' + this.activeRoom.messagesCount + 1).then(function (res) {
+      fetch('http://azurix.pl:8080/room/' + this.activeRoom.id + '?count=' + this.activeRoom.messagesCount).then(function (res) {
         return res.json();
       }).then(function (data) {
         // Check if room has messages inside
         if (data.length > 0) {
           // If last message changed
-          // TODO: MAKE IT WORK...
-          if (data[data.length - 1].id !== _this4.activeRoom.messages[0]['id']) {
-            // Add this message to count
+          if (data[0].id !== _this4.activeRoom.messages[_this4.activeRoom.messages.length - 1]['id']) {
             _this4.activeRoom.messagesCount++;
             _this4.activeRoom.messages = data.reverse(); // Wo ho ah
-            // Scroll to bottom -> show new message
+            // Scroll to bottom to show new message
 
             _this4.scrollMessages(); // Debug
 
@@ -300,18 +302,23 @@ __webpack_require__.r(__webpack_exports__);
           _this4.activeRoom.messages = [{
             id: 0,
             senderId: {
-              login: 'dump'
+              login: 'No messages'
             }
           }];
         }
       });
     },
     scrollMessages: function scrollMessages() {
-      var element = this.$el.querySelector("#room-messages");
-      element.scrollTop = element.scrollHeight;
+      var _this5 = this;
+
+      setTimeout(function () {
+        var element = _this5.$el.querySelector("#room-messages");
+
+        element.scrollTop = element.scrollHeight;
+      }, 100);
     },
     sendMessage: function sendMessage() {
-      var _this5 = this;
+      var _this6 = this;
 
       fetch('http://azurix.pl:8080/room/' + this.activeRoom.id + '/message?senderId=' + this.userId + '&message=' + this.newMessage.message, {
         method: 'POST'
@@ -319,9 +326,9 @@ __webpack_require__.r(__webpack_exports__);
         if (res.status === 200) {
           console.log('Message sent!'); // Clear new message input
 
-          _this5.newMessage.message = ''; // Synchronize messages
+          _this6.newMessage.message = ''; // Synchronize messages
 
-          _this5.getActiveRoomMessages();
+          _this6.getActiveRoomMessages();
         } else {
           // TODO: handle error message
           console.log('Message not sent!');
@@ -338,11 +345,11 @@ __webpack_require__.r(__webpack_exports__);
       this.getRooms();
     },
     initTimeouts: function initTimeouts() {
-      var _this6 = this;
+      var _this7 = this;
 
       if (this.roomsTimeout) {
         setInterval(function () {
-          _this6.getRooms();
+          _this7.getRooms();
         }, 2000);
         this.roomsTimeout = false;
       }
@@ -350,14 +357,14 @@ __webpack_require__.r(__webpack_exports__);
       if (this.activeRoom.visible) {
         if (this.usersTimeout) {
           setInterval(function () {
-            _this6.getActiveRoomUsers();
+            _this7.getActiveRoomUsers();
           }, 2000);
           this.usersTimeout = false;
         }
 
         if (this.messagesTimeout) {
           setInterval(function () {
-            _this6.getActiveRoomMessages();
+            _this7.getActiveRoomMessages();
           }, 1000);
           this.messagesTimeout = false;
         }

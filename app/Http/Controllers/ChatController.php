@@ -27,7 +27,7 @@ class ChatController extends Controller
         $request->validate([
             'login'     => 'required|max:32',
             'email'     => 'required|max:255',
-            'password'  => 'required|min:6|max:255',
+            'password'  => 'required|min:4|max:255',
             'password2' => 'required|same:password'
         ]);
         //Get post values
@@ -68,7 +68,36 @@ class ChatController extends Controller
             return redirect('/chat');
         } else {
             // Bad credentials
-            return redirect('/login')->with('message', 'Bad credentials!');
+            return redirect('/login')->withErrors('Bad credentials!');
+        }
+    }
+
+    /**
+     *  REST API user password changing functionality
+     *  POST FUNCTION
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function changePassword (Request $request)
+    {
+        // From fields validation
+        $request->validate([
+            'passwordOld' => 'required',
+            'passwordNew' => 'required|min:4|max:255',
+            'passwordNewConfirm' => 'required|same:passwordNew'
+        ]);
+        // Get post values
+        $passwordOld = $request->input('passwordOld');
+        $passwordNew = $request->input('passwordNew');
+        // Authenticate user
+        $res = Api::changePassword($passwordOld, $passwordNew);
+        if ($res == 200) {
+            // Good credentials -> password changed
+            return redirect('/changepassword')->with('message', 'Password has been changed');
+        } else {
+            // Bad credentials
+            return redirect('/changepassword')->withErrors('Bad old password!');
         }
     }
 

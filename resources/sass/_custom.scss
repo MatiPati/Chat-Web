@@ -43,7 +43,10 @@ footer {
   right: 0;
   z-index: 10;
   text-align: right;
-  color: $font-dark;
+  color: $font-light;
+  a{
+    color: $font-light;
+  }
 }
 
 .card {
@@ -110,7 +113,7 @@ input {
     content: "";
     width: 100%;
     height: 200px;
-    background-image: url("img/cut1.png");
+    //background-image: url("img/cut1.png");
     background-position: top;
     background-size: cover;
     position: absolute;
@@ -141,7 +144,7 @@ input {
     content: "";
     width: 100%;
     height: 200px;
-    background-image: url("img/cut1.png");
+    //background-image: url("img/cut1.png");
     background-position: top;
     background-size: cover;
     position: absolute;

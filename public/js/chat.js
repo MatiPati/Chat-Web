@@ -12475,6 +12475,14 @@ module.exports = g;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+/*
+* Chat APP front-end based on VUE-js framework
+*
+* Coded entirely by Mateusz Ożóg
+* Github project: https://github.com/Azurixa/Chat-Web
+*
+* Covered under MIT licence
+*/
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 Vue.component('chat', __webpack_require__(/*! ./components/Chat.vue */ "./resources/js/components/Chat.vue").default);
 var app = new Vue({

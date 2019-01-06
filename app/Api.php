@@ -21,13 +21,7 @@ class Api extends Model
     {
         $client = new GuzzleHttp\Client();
         try {
-            $res = $client->request('GET', 'http://azurix.pl:8080/auth/register', [
-                'form_params' => [
-                    'login'    => $login,
-                    'password' => $password,
-                    'email'    => $email
-                ]
-            ]);
+            $res = $client->request('GET', 'http://azurix.pl:8080/auth/register?email='.$email.'&login='.$login.'&password='.$password);
             return 1; //TODO: change to `$res->getBody()` when Patyk manage to make return codes...
         } catch (GuzzleHttp\Exception\GuzzleException $e) {
             // No API response

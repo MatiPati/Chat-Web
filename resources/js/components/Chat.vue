@@ -14,7 +14,7 @@
             <div id="room-list-box">
 
                 <!-- Draw all rooms user is in -->
-                <div class="card room-to-change" v-for="room in rooms" v-on:click="changeRoom(room)">
+                <div class="card room-to-change" v-for="(room, index) in rooms" v-bind:key=index v-on:click="changeRoom(room)">
                     <a class="d-block change-room-name">{{room.room.name}}</a>
                     <p class="small room-creator">{{room.room.creator.login}}</p>
                 </div>
@@ -43,7 +43,7 @@
                     </div>
                     <p id="active-room-users">
                         <span id="roomUsers">
-                            <span v-for="user in activeRoom.users" class="badge badge-secondary small mr-1">{{user.user.login}}</span>
+                            <span v-for="(user, index) in activeRoom.users" v-bind:key=index class="badge badge-secondary small mr-1">{{user.user.login}}</span>
                         </span><span class="badge badge-success position-relative" id="addFormShow"
                                      style="bottom: -0.8px; z-index: 90">
                             <i class="bx bx-plus-circle" title="Add user to room"
@@ -62,7 +62,7 @@
                     </div>
                 </div>
                 <div id="room-messages">
-                    <div v-for="(message, i) in activeRoom.messages">
+                    <div v-for="(message, i) in activeRoom.messages" v-bind:key=i>
                         <p class="message-sender"
                            v-if="i == 0|| activeRoom.messages[i].senderId.id !== activeRoom.messages[i - 1].senderId.id">
                             <span class="badge-primary badge">{{message.senderId.login}}</span>
@@ -167,7 +167,7 @@
                 fetch('http://azurix.pl:8080/room/' + this.activeRoom.id + '/users')
                     .then(res => res.json())
                     .then(data => {
-                        this.activeRoom.users = data
+                        this.activeRoom.users = data;
                     });
             },
             addUserToActiveRoom() {

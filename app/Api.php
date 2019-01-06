@@ -21,9 +21,8 @@ class Api extends Model
     {
         $client = new GuzzleHttp\Client();
         try {
-            $res = $client->request('POST', 'http://azurix.pl:8080/register', [
+            $res = $client->request('GET', 'http://azurix.pl:8080/auth/register', [
                 'form_params' => [
-                    'action'   => 'register', // TODO: remove in next v
                     'login'    => $login,
                     'password' => $password,
                     'email'    => $email
@@ -48,12 +47,7 @@ class Api extends Model
     {
         $client = new GuzzleHttp\Client();
         try {
-            $res = $client->request('POST', 'http://azurix.pl:8080/login', [
-                'form_params' => [
-                    'login'    => $login,
-                    'password' => $password
-                ]
-            ])->getBody();
+            $res = $client->request('GET', 'http://azurix.pl:8080/auth/login?login='.$login.'&password='.$password)->getBody();
             $res = json_decode($res, true);
             if ($res['id'] > 0) {
                 // User with this login && password exist
@@ -62,7 +56,7 @@ class Api extends Model
                     'logged_in' => true,
                     'id'        => $res['id'],
                     'login'     => $res['login'],
-                    'api_token' => 'todo'
+                    'authLvl'   => $res['authLvl']
                 ]);
                 return 200;
             } else {

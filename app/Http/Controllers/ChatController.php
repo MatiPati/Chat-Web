@@ -13,7 +13,7 @@ class ChatController extends Controller
     {
         return view('chat.app');
     }
-    
+
     /**
      * REST API user register functionality
      * POST FUNCTION

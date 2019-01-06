@@ -9569,7 +9569,11 @@ footer {
   right: 0;
   z-index: 10;
   text-align: right;
-  color: #0F2027;
+  color: #f2f7f9;
+}
+
+footer a {
+  color: #f2f7f9;
 }
 
 .card {
@@ -9642,7 +9646,6 @@ input {
   content: "";
   width: 100%;
   height: 200px;
-  background-image: url(/images/cut1.png?a8fabe02df3871c9531a90c16234eac5);
   background-position: top;
   background-size: cover;
   position: absolute;
@@ -9674,7 +9677,6 @@ input {
   content: "";
   width: 100%;
   height: 200px;
-  background-image: url(/images/cut1.png?a8fabe02df3871c9531a90c16234eac5);
   background-position: top;
   background-size: cover;
   position: absolute;

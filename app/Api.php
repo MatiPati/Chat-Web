@@ -52,7 +52,7 @@ class Api extends Model
                     'login'     => $res['login'],
                     'authLvl'   => $res['authLvl']
                 ]);
-                return 200;
+                return $res;
             } else {
                 // Bad credentials login/pass
                 return 401;

@@ -63,6 +63,7 @@ class ChatController extends Controller
         $password = $request->input('password');
         // Authenticate user
         $res = Api::login($login, $password);
+        return $res;
         if ($res == 200) {
             // Logged in session vars added
             return redirect('/chat');

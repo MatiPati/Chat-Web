@@ -9569,7 +9569,11 @@ footer {
   right: 0;
   z-index: 10;
   text-align: right;
-  color: #0F2027;
+  color: #f2f7f9;
+}
+
+footer a {
+  color: #f2f7f9;
 }
 
 .card {
@@ -9642,7 +9646,6 @@ input {
   content: "";
   width: 100%;
   height: 200px;
-  background-image: url(/images/cut1.png?a8fabe02df3871c9531a90c16234eac5);
   background-position: top;
   background-size: cover;
   position: absolute;
@@ -9674,7 +9677,6 @@ input {
   content: "";
   width: 100%;
   height: 200px;
-  background-image: url(/images/cut1.png?a8fabe02df3871c9531a90c16234eac5);
   background-position: top;
   background-size: cover;
   position: absolute;
@@ -9690,6 +9692,15 @@ input {
 #chat-app .left-col {
   background-color: #f2f7f9;
   width: 25%;
+  z-index: 99;
+}
+
+@media screen and (max-width: 768px) {
+  #chat-app .left-col {
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+  }
 }
 
 #chat-app .left-col .profile-box {
@@ -9732,6 +9743,12 @@ input {
   background-image: linear-gradient(120deg, #0F2027, #203A43, #2C5364);
 }
 
+@media screen and (max-width: 768px) {
+  #chat-app .right-col {
+    width: 100%;
+  }
+}
+
 #chat-app .right-col #active-room .header {
   padding: 0.25rem;
   background-color: #f2f7f9;
@@ -9757,6 +9774,22 @@ input {
 
 #chat-app .right-col #active-room .header .add-form {
   position: relative;
+}
+
+#chat-app .right-col #active-room .header .rooms-shower {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  #chat-app .right-col #active-room .header .rooms-shower {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.4rem 0.6rem 0 0;
+    font-size: 2.45rem;
+    z-index: 100;
+  }
 }
 
 #chat-app .right-col #active-room #room-messages {

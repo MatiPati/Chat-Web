@@ -13,11 +13,10 @@
                     <i class='bx bx-user-plus'></i> Register account
                 </a>
                 <a href="/login" class="btn btn-primary">
-                    <i class='bx bx-user-check'></i> Log-in
+                    <i class='bx bx-user-check'></i> Login
                 </a>
             </div>
         </div>
-        <div class="slider-img"></div>
     </div>
 
 @endsection

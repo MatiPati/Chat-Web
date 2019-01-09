@@ -177,6 +177,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['userId', 'userLogin'],
   data: function data() {
@@ -212,6 +215,8 @@ __webpack_require__.r(__webpack_exports__);
       newMessage: {
         message: ''
       },
+      // RWD
+      leftColVisible: true,
       // Timeouts
       roomsTimeout: true,
       usersTimeout: true,
@@ -247,7 +252,9 @@ __webpack_require__.r(__webpack_exports__);
       this.getActiveRoomMessages(); // Set flag to show active room
 
       this.activeRoom.visible = true;
-      this.initTimeouts();
+      this.initTimeouts(); // RWD: hide rooms col
+
+      this.switchLeftCol();
     },
     getActiveRoomUsers: function getActiveRoomUsers() {
       var _this2 = this;
@@ -368,6 +375,13 @@ __webpack_require__.r(__webpack_exports__);
           }, 1000);
           this.messagesTimeout = false;
         }
+      }
+    },
+    switchLeftCol: function switchLeftCol() {
+      // Only on mobile
+      if (innerWidth < 768) {
+        console.log(1);
+        this.leftColVisible = !this.leftColVisible;
       }
     }
   }
@@ -859,113 +873,127 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { attrs: { id: "chat-app" } }, [
-    _c("div", { staticClass: "left-col" }, [
-      _c("div", { staticClass: "profile-box" }, [
-        _c("div", { staticClass: "text-center" }, [
-          _c("i", { staticClass: "bx bx-id-card h1 mb-0" }),
-          _vm._v(" "),
-          _c("p", { staticClass: "m-0", attrs: { id: "user_login" } }, [
-            _vm._v(
-              "\n                    " +
-                _vm._s(_vm.userLogin) +
-                "\n                "
-            )
-          ]),
-          _vm._v(" "),
-          _vm._m(0),
-          _vm._v(" "),
-          _vm._m(1)
-        ])
-      ]),
-      _vm._v(" "),
-      _c(
-        "div",
-        { attrs: { id: "room-list-box" } },
-        _vm._l(_vm.rooms, function(room) {
-          return _c(
-            "div",
-            {
-              staticClass: "card room-to-change",
-              on: {
-                click: function($event) {
-                  _vm.changeRoom(room)
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.leftColVisible,
+            expression: "leftColVisible"
+          }
+        ],
+        staticClass: "left-col"
+      },
+      [
+        _c("div", { staticClass: "profile-box" }, [
+          _c("div", { staticClass: "text-center" }, [
+            _c("i", { staticClass: "bx bx-id-card h1 mb-0" }),
+            _vm._v(" "),
+            _c("p", { staticClass: "m-0", attrs: { id: "user_login" } }, [
+              _vm._v(
+                "\n                    " +
+                  _vm._s(_vm.userLogin) +
+                  "\n                "
+              )
+            ]),
+            _vm._v(" "),
+            _vm._m(0),
+            _vm._v(" "),
+            _vm._m(1)
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { attrs: { id: "room-list-box" } },
+          _vm._l(_vm.rooms, function(room) {
+            return _c(
+              "div",
+              {
+                staticClass: "card room-to-change",
+                on: {
+                  click: function($event) {
+                    _vm.changeRoom(room)
+                  }
                 }
-              }
-            },
-            [
-              _c("a", { staticClass: "d-block change-room-name" }, [
-                _vm._v(_vm._s(room.room.name))
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "small room-creator" }, [
-                _vm._v(_vm._s(room.room.creator.login))
-              ])
-            ]
-          )
-        }),
-        0
-      ),
-      _vm._v(" "),
-      _c("div", { staticClass: "new-room-box" }, [
-        _c("div", { staticClass: "card p-3" }, [
-          _c("div", { staticClass: "form-group" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.newRoom.name,
-                  expression: "newRoom.name"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: {
-                type: "text",
-                id: "add-room-name",
-                placeholder: "Name of new room"
               },
-              domProps: { value: _vm.newRoom.name },
-              on: {
-                keydown: function($event) {
-                  if (
-                    !("button" in $event) &&
-                    _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                  ) {
-                    return null
+              [
+                _c("a", { staticClass: "d-block change-room-name" }, [
+                  _vm._v(_vm._s(room.room.name))
+                ]),
+                _vm._v(" "),
+                _c("p", { staticClass: "small room-creator" }, [
+                  _vm._v(_vm._s(room.room.creator.login))
+                ])
+              ]
+            )
+          }),
+          0
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "new-room-box" }, [
+          _c("div", { staticClass: "card p-3" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.newRoom.name,
+                    expression: "newRoom.name"
                   }
-                  _vm.createRoom()
+                ],
+                staticClass: "form-control",
+                attrs: {
+                  type: "text",
+                  id: "add-room-name",
+                  placeholder: "Name of new room"
                 },
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
+                domProps: { value: _vm.newRoom.name },
+                on: {
+                  keydown: function($event) {
+                    if (
+                      !("button" in $event) &&
+                      _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                    ) {
+                      return null
+                    }
+                    _vm.createRoom()
+                  },
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.newRoom, "name", $event.target.value)
                   }
-                  _vm.$set(_vm.newRoom, "name", $event.target.value)
                 }
-              }
+              })
+            ]),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary",
+                attrs: { id: "add-room" },
+                on: {
+                  click: function($event) {
+                    _vm.createRoom()
+                  }
+                }
+              },
+              [_vm._v("Create new room")]
+            ),
+            _vm._v(" "),
+            _c("p", {
+              staticClass: "mb-0 badge badge-danger",
+              attrs: { id: "roomCreateErrors" }
             })
-          ]),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-primary",
-              attrs: { id: "add-room" },
-              on: {
-                click: function($event) {
-                  _vm.createRoom()
-                }
-              }
-            },
-            [_vm._v("Create new room")]
-          ),
-          _vm._v(" "),
-          _c("p", {
-            staticClass: "mb-0 badge badge-danger",
-            attrs: { id: "roomCreateErrors" }
-          })
+          ])
         ])
-      ])
-    ]),
+      ]
+    ),
     _vm._v(" "),
     _c("div", { staticClass: "right-col" }, [
       _c(
@@ -993,6 +1021,12 @@ var render = function() {
               _vm._v(_vm._s(_vm.activeRoom.creator.login))
             ]),
             _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "rooms-shower", on: { click: _vm.switchLeftCol } },
+              [_c("i", { staticClass: "bx bx-menu" })]
+            ),
+            _vm._v(" "),
             _c("p", { attrs: { id: "active-room-users" } }, [
               _c(
                 "span",
@@ -1010,7 +1044,7 @@ var render = function() {
                 "span",
                 {
                   staticClass: "badge badge-success position-relative",
-                  staticStyle: { bottom: "-0.8px" },
+                  staticStyle: { bottom: "-0.8px", "z-index": "90" },
                   attrs: { id: "addFormShow" }
                 },
                 [
@@ -12441,6 +12475,14 @@ module.exports = g;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+/*
+* Chat APP front-end based on VUE-js framework
+*
+* Coded entirely by Mateusz Ożóg
+* Github project: https://github.com/Azurixa/Chat-Web
+*
+* Covered under MIT licence
+*/
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 Vue.component('chat', __webpack_require__(/*! ./components/Chat.vue */ "./resources/js/components/Chat.vue").default);
 var app = new Vue({

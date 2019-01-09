@@ -13,7 +13,7 @@ class ChatController extends Controller
     {
         return view('chat.app');
     }
-    
+
     /**
      * REST API user register functionality
      * POST FUNCTION
@@ -63,6 +63,7 @@ class ChatController extends Controller
         $password = $request->input('password');
         // Authenticate user
         $res = Api::login($login, $password);
+        return $res;
         if ($res == 200) {
             // Logged in session vars added
             return redirect('/chat');
@@ -83,8 +84,8 @@ class ChatController extends Controller
     {
         // From fields validation
         $request->validate([
-            'passwordOld' => 'required',
-            'passwordNew' => 'required|min:4|max:255',
+            'passwordOld'        => 'required',
+            'passwordNew'        => 'required|min:4|max:255',
             'passwordNewConfirm' => 'required|same:passwordNew'
         ]);
         // Get post values

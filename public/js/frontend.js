@@ -214,6 +214,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'chat',
+  // from PHP vars >_>
   props: ["userId", "userLogin"],
   data: function data() {
     return {
@@ -229,7 +231,7 @@ __webpack_require__.r(__webpack_exports__);
         users: [],
         messages: [{
           id: 0,
-          senderId: {
+          sender: {
             login: "No messages"
           }
         }],
@@ -348,7 +350,7 @@ __webpack_require__.r(__webpack_exports__);
           // Room has no messages
           _this4.activeRoom.messages = [{
             id: 0,
-            senderId: {
+            sender: {
               login: "No messages"
             }
           }];
@@ -1264,11 +1266,11 @@ var render = function() {
             _vm._l(_vm.activeRoom.messages, function(message, i) {
               return _c("div", { key: i }, [
                 i == 0 ||
-                _vm.activeRoom.messages[i].senderId.id !==
-                  _vm.activeRoom.messages[i - 1].senderId.id
+                _vm.activeRoom.messages[i].sender.id !==
+                  _vm.activeRoom.messages[i - 1].sender.id
                   ? _c("p", { staticClass: "message-sender" }, [
                       _c("span", { staticClass: "badge-primary badge" }, [
-                        _vm._v(_vm._s(message.senderId.login))
+                        _vm._v(_vm._s(message.sender.login))
                       ])
                     ])
                   : _vm._e(),

@@ -93,9 +93,9 @@
                     <div v-for="(message, i) in activeRoom.messages" v-bind:key="i">
                         <p
                                 class="message-sender"
-                                v-if="i == 0|| activeRoom.messages[i].senderId.id !== activeRoom.messages[i - 1].senderId.id"
+                                v-if="i == 0|| activeRoom.messages[i].sender.id !== activeRoom.messages[i - 1].sender.id"
                         >
-                            <span class="badge-primary badge">{{message.senderId.login}}</span>
+                            <span class="badge-primary badge">{{message.sender.login}}</span>
                         </p>
                         <p class="message-body">{{message.message}}</p>
                     </div>
@@ -118,8 +118,9 @@
 
 <script>
     export default {
+        name: 'chat',
+        // from PHP vars >_>
         props: ["userId", "userLogin"],
-
         data() {
             return {
                 // Default var
@@ -135,7 +136,7 @@
                     messages: [
                         {
                             id: 0,
-                            senderId: {
+                            sender: {
                                 login: "No messages"
                             }
                         }
@@ -212,13 +213,7 @@
                     credentials: 'include',
                 }).then(res => {
                     if (res.status === 200) {
-                        console.log(
-                            "User [" +
-                            this.addUser.login +
-                            "] to room [" +
-                            this.activeRoom.id +
-                            "] added!"
-                        );
+                        console.log("User [" + this.addUser.login + "] to room [" + this.activeRoom.id + "] added!");
                         // Hide adding user form
                         this.addUser.visible = false;
                         // Clear new user login input
@@ -256,7 +251,7 @@
                             this.activeRoom.messages = [
                                 {
                                     id: 0,
-                                    senderId: {
+                                    sender: {
                                         login: "No messages"
                                     }
                                 }

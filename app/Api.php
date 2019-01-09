@@ -41,8 +41,8 @@ class Api extends Model
     {
         $client = new GuzzleHttp\Client();
         try {
-            $res = $client->request('GET', 'http://azurix.pl:8080/auth/login?login='.$login.'&password='.$password)->getBody();
-            $res = json_decode($res, true);
+            $res = $client->request('GET', 'http://azurix.pl:8080/auth/login?login='.$login.'&password='.$password);
+            $res = json_decode($res->getBody(), true);
             if ($res['id'] > 0) {
                 // User with this login && password exist
                 // Create session with user credentials
@@ -50,7 +50,7 @@ class Api extends Model
                     'logged_in' => true,
                     'id'        => $res['id'],
                     'login'     => $res['login'],
-                    'authLvl'   => $res['authLvl']
+                    'authLvl'   => $res['authLvl'],
                 ]);
                 return 200;
             } else {

@@ -14,7 +14,7 @@ Vue.component(
 );
 
 Vue.component(
-    'login', require('./components/Login.vue').default
+    'login', require('./components/auth/Login.vue').default
 );
 
 const app = new Vue({

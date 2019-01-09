@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Api;
 use Illuminate\Support\Facades\Session;
+use Psy\Util\Json;
 
 class ChatController extends Controller
 {
@@ -13,7 +14,7 @@ class ChatController extends Controller
     {
         return view('chat.app');
     }
-    
+
     /**
      * REST API user register functionality
      * POST FUNCTION
@@ -65,10 +66,10 @@ class ChatController extends Controller
         $res = Api::login($login, $password);
         if ($res == 200) {
             // Logged in session vars added
-            return redirect('/chat');
+            return 200;
         } else {
             // Bad credentials
-            return redirect('/login')->withErrors('Bad credentials!');
+            return 401;
         }
     }
 
@@ -83,8 +84,8 @@ class ChatController extends Controller
     {
         // From fields validation
         $request->validate([
-            'passwordOld' => 'required',
-            'passwordNew' => 'required|min:4|max:255',
+            'passwordOld'        => 'required',
+            'passwordNew'        => 'required|min:4|max:255',
             'passwordNewConfirm' => 'required|same:passwordNew'
         ]);
         // Get post values

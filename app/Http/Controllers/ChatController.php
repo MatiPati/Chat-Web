@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Api;
 use Illuminate\Support\Facades\Session;
+use Psy\Util\Json;
 
 class ChatController extends Controller
 {
@@ -63,13 +64,12 @@ class ChatController extends Controller
         $password = $request->input('password');
         // Authenticate user
         $res = Api::login($login, $password);
-        return $res;
         if ($res == 200) {
             // Logged in session vars added
-            return redirect('/chat');
+            return 200;
         } else {
             // Bad credentials
-            return redirect('/login')->withErrors('Bad credentials!');
+            return 401;
         }
     }
 

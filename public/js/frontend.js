@@ -461,13 +461,47 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'login',
+  props: ['csrfToken'],
   data: function data() {
-    return {};
+    return {
+      formData: {
+        login: '',
+        password: ''
+      }
+    };
   },
-  methods: {}
+  methods: {
+    login: function login() {
+      var _this = this;
+
+      fetch("http://azurix.pl:8080/auth/login?login=" + this.formData.login + "&password=" + this.formData.password, {
+        method: "GET",
+        credentials: 'include'
+      }).then(function (res) {
+        return res.json();
+      }).then(function (data) {
+        var formData = new FormData();
+        formData.append('login', _this.formData.login);
+        formData.append('password', _this.formData.password);
+        formData.append('_token', _this.csrfToken);
+        fetch("/login", {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Accept': 'application/json'
+          }
+        }).then(function (res) {
+          return res.json();
+        }).then(function (data) {
+          if (data === 200) {
+            window.location.href = '/chat';
+          }
+        });
+      });
+    }
+  }
 });
 
 /***/ }),
@@ -1338,66 +1372,97 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "login" }, [
-      _c("div", { attrs: { id: "auth-box" } }, [
-        _c("div", { staticClass: "auth-form" }, [
-          _c("h1", { staticClass: "mb-0" }, [_vm._v("Login")]),
-          _vm._v(" "),
-          _c("p", { staticClass: "mb-4" }, [_vm._v("to Ch-APP")]),
-          _vm._v(" "),
-          _c("form", { attrs: { action: "/login", method: "post" } }, [
-            _c("div", { staticClass: "form-group" }, [
-              _c("input", {
-                staticClass: "form-control",
-                attrs: {
-                  type: "text",
-                  name: "login",
-                  id: "login",
-                  placeholder: "Login",
-                  required: ""
+  return _c("div", { staticClass: "login" }, [
+    _c("div", { attrs: { id: "auth-box" } }, [
+      _c("div", { staticClass: "auth-form" }, [
+        _c("h1", { staticClass: "mb-0" }, [_vm._v("Login")]),
+        _vm._v(" "),
+        _c("p", { staticClass: "mb-4" }, [_vm._v("to Ch-APP")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "form-group" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.formData.login,
+                expression: "formData.login"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: {
+              type: "text",
+              name: "login",
+              id: "login",
+              placeholder: "Login",
+              required: ""
+            },
+            domProps: { value: _vm.formData.login },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
                 }
-              })
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "form-group" }, [
-              _c("input", {
-                staticClass: "form-control",
-                attrs: {
-                  type: "password",
-                  name: "password",
-                  id: "password",
-                  placeholder: "Password",
-                  required: ""
+                _vm.$set(_vm.formData, "login", $event.target.value)
+              }
+            }
+          })
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "form-group" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.formData.password,
+                expression: "formData.password"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: {
+              type: "password",
+              name: "password",
+              id: "password",
+              placeholder: "Password",
+              required: ""
+            },
+            domProps: { value: _vm.formData.password },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
                 }
-              })
-            ]),
-            _vm._v(" "),
-            _c(
-              "button",
-              { staticClass: "btn btn-primary", attrs: { type: "submit" } },
-              [
-                _c("i", { staticClass: "bx bx-log-in" }),
-                _vm._v(" Login to Ch-APP")
-              ]
-            ),
-            _c("br"),
-            _vm._v(" "),
-            _c("a", { staticClass: "small", attrs: { href: "/register" } }, [
-              _vm._v("Create account")
-            ])
-          ])
+                _vm.$set(_vm.formData, "password", $event.target.value)
+              }
+            }
+          })
+        ]),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-primary",
+            attrs: { type: "submit" },
+            on: {
+              click: function($event) {
+                _vm.login()
+              }
+            }
+          },
+          [_c("i", { staticClass: "bx bx-log-in" }), _vm._v(" Login to Ch-APP")]
+        ),
+        _vm._v(" "),
+        _c("br"),
+        _vm._v(" "),
+        _c("a", { staticClass: "small", attrs: { href: "/register" } }, [
+          _vm._v("Create account")
         ])
       ])
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 

@@ -2,6 +2,6 @@
 
 @section('content')
 
-    <login></login>
+    <login csrf-token="{{ csrf_token() }}"></login>
 
 @endsection

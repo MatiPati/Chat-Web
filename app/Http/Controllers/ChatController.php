@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Session;
 class ChatController extends Controller
 {
     // TODO: index@
-    public function index()
+    public function index ()
     {
         return view('chat.app');
     }
@@ -21,13 +21,13 @@ class ChatController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function register(Request $request)
+    public function register (Request $request)
     {
         // From fields validation
         $request->validate([
-            'login' => 'required|max:32',
-            'email' => 'required|max:255',
-            'password' => 'required|min:4|max:255',
+            'login'     => 'required|max:32',
+            'email'     => 'required|max:255',
+            'password'  => 'required|min:4|max:255',
             'password2' => 'required|same:password'
         ]);
         //Get post values
@@ -51,11 +51,11 @@ class ChatController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function login(Request $request)
+    public function login (Request $request)
     {
         // From fields validation
         $request->validate([
-            'login' => 'required',
+            'login'    => 'required',
             'password' => 'required'
         ]);
         // Get post values
@@ -80,12 +80,12 @@ class ChatController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function changePassword(Request $request)
+    public function changePassword (Request $request)
     {
         // From fields validation
         $request->validate([
-            'passwordOld' => 'required',
-            'passwordNew' => 'required|min:4|max:255',
+            'passwordOld'        => 'required',
+            'passwordNew'        => 'required|min:4|max:255',
             'passwordNewConfirm' => 'required|same:passwordNew'
         ]);
         // Get post values
@@ -105,7 +105,7 @@ class ChatController extends Controller
     /**
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function logout()
+    public function logout ()
     {
         // Forget all session vars
         Session::forget([

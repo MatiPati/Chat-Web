@@ -13,6 +13,10 @@ Vue.component(
     'chat', require('./components/Chat.vue').default
 );
 
+Vue.component(
+    'login', require('./components/Login.vue').default
+);
+
 const app = new Vue({
     el: '#app'
 });

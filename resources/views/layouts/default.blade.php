@@ -5,7 +5,9 @@
 <body>
 <main>
     @include('inc.navbar')
-    @yield('content')
+    <div id="app">
+        @yield('content')
+    </div>
     @include('inc.footer')
 </main>
 </body>
